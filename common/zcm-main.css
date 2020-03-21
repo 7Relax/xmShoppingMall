@@ -248,12 +248,12 @@ body {
 
 .ml-0 { margin-left: 0;}
 .ml { margin-left: 5upx;}
-.ml-auto { margin-left: auto;}
 .ml-1 { margin-left: 10upx;}
 .ml-2 { margin-left: 20upx;}
 .ml-3 { margin-left: 30upx;}
 .ml-4 { margin-left: 40upx;}
 .ml-5 { margin-left: 50upx;}
+.ml-auto { margin-left: auto;}
 
 .mr-0 { margin-right: 0;}
 .mr { margin-right: 5upx;}
@@ -262,6 +262,7 @@ body {
 .mr-3 { margin-right: 30upx;}
 .mr-4 { margin-right: 40upx;}
 .mr-5 { margin-right: 50upx;}
+.mr-auto { margin-right: auto;}
 
 .p-0 {padding-left: 0;padding-right: 0;padding-top: 0;padding-bottom: 0;}
 .p {padding-left: 5upx;padding-right: 5upx;padding-top: 5upx;padding-bottom:5upx;}

@@ -31,7 +31,6 @@
 <script>
 	import uniIcons from '../uni-icons/uni-icons.vue'
 	import uniBadge from '../uni-badge/uni-badge.vue'
-
 	/**
 	 * ListItem 列表子组件
 	 * @description 列表子组件
@@ -136,7 +135,8 @@
 		// inject: ['list'],
 		data() {
 			return {
-				isFirstChild: false
+				isFirstChild: false,
+				list: {}
 			}
 		},
 		mounted() {
@@ -168,7 +168,7 @@
 		opacity: 0.3;
 	}
 	.uni-list-item--hover {
-		background-color: #f4f4f4;
+		background-color: #f6f6f6;
 	}
 	.uni-list-item__container {
 		position: relative;

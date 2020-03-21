@@ -67,7 +67,13 @@
         }
         ,{
             "path" : "pages/cart/cart",
-            "style" : {}
+            "style" : {
+				"app-plus": { 
+					"titleNView": false ,// 取消原生导航
+					"scrollIndicator": "none"
+					// "bounce": "none"
+				}
+			}
         }
         ,{
             "path" : "pages/my/my",
@@ -76,6 +82,7 @@
         ,{
             "path" : "pages/detail/detail",
             "style" : {
+				"navigationStyle":"custom",
 				"app-plus": {
 					"scrollIndicator": "none",
 					"bounce": "none",
@@ -90,11 +97,21 @@
 				}
 			}
         }
+        ,{
+            "path" : "pages/detail-comment/detail-comment",
+            "style" : {
+				"navigationBarTitleText": "商品评价",
+				"app-plus": {
+					"bounce": "none",
+					"scrollIndicator": "none"
+				}
+			}
+        }
     ],
 	// 全局配置
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "小程序",
+		"navigationBarTitleText": "小米商城",
 		"navigationBarBackgroundColor": "#FFFFFF",
 		"backgroundColor": "#FFFFFF" // 只针对微信小程序
 	},
