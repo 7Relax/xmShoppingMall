@@ -4,20 +4,20 @@
 			title="购物车" fixed statusBar @clickRight=" isEdit = ! isEdit ">
 		</uni-nav-bar>
 		<!-- 购物车为空 -->
-		<!-- <view class="py-5 d-flex a-center j-center bg-white border">
+		<view class="py-5 d-flex a-center j-center bg-white" v-if="disableSelectAll">
 			<view class="iconfont icon-gouwuche text-light-muted" style="font-size: 50rpx;"></view>
 			<text class="text-light-muted mx-2">购物车什么都没有哦</text>
 			<view class="px-2 py-1 border border-light-secondary rounded" hover-class="bg-light-secondary">
 				逛一逛
 			</view>
-		</view> -->
+		</view>
 		<!-- 购物车商品列表 -->
-		<view class="bg-white px-2">
+		<view class="bg-white px-2" v-else>
 			<!-- 列表 -->
 			<view class="d-flex a-center py-3 border-bottom border-light-secondary" v-for="(item, index) in list" :key="index">
 				<!-- flex-shrink: 0 - 防止被挤压变形 -->
-				<label class="radio d-flex a-center j-center flex-shrink" style="width: 80rpx; height: 80rpx;">
-					<radio :value="item.id" color="#FD6801"></radio>
+				<label class="radio d-flex a-center j-center flex-shrink" style="width: 80rpx; height: 80rpx;" @click="selectItem(index)">
+					<radio color="#FD6801" :value="item.id" :checked="item.checked"></radio>
 				</label>
 				<image :src="item.cover" mode="widthFix" 
 					style="width: 150rpx; height: 150rpx;"
@@ -25,10 +25,19 @@
 				</image>
 				<!-- flex-1 - 占满剩余空间（独占） -->
 				<view class="flex-1 d-flex flex-column pl-2">
+					<!-- 商品名 -->
 					<view class="text-dark" style="font-size: 35rpx;">{{item.title}}</view>
-					<view class="d-flex text-light-muted mb-1">
+					<!-- 规格属性 -->
+					<view class="d-flex text-light-muted mb-1" v-if="isEdit" @tap.stop="doShowPopup(index)" :class="isEdit ? 'p-1 bg-light-secondary mb-2 a-center' : '' ">
 						<text class="mr-1" v-for="(attr, attrIndex) in item.attrs" :key="attrIndex">{{attr.list[attr.selected].name}}</text>
+						<view class="iconfont icon-bottom font ml-auto" v-if="isEdit"></view>
 					</view>
+					<view class="d-flex text-light-muted mb-1" v-else>
+						<text class="mr-1" v-for="(attr, attrIndex) in item.attrs" :key="attrIndex">{{attr.list[attr.selected].name}}</text>
+						<view class="iconfont icon-bottom font ml-auto" v-if="isEdit"></view>
+					</view>
+					
+					<!-- 价格 -->
 					<view class="mt-auto d-flex j-sb a-center">
 						<price>{{item.pPrice}}</price>
 						<!-- align-self: flex-end - 处于垂直方向的底部 -->
@@ -42,20 +51,66 @@
 		</view>
 	
 		<!-- 合计 -->
+		<!-- 占位 -->
+		<view style="height: 100rpx;"></view>
 		<!-- align-items: stretch; - y轴方向填充满 -->
 		<view class="d-flex a-center position-fixed left-0 right-0 bottom-0 border-top border-light-secondary a-stretch"
-			style="height: 100upx; z-index: 100;"
+			style="height: 100rpx; z-index: 2000;"
 		>
-			<label class="radio d-flex a-center j-center flex-shrink" style="width: 120rpx;">
-				<radio value="1" color="#FD6801"></radio>
+			<label class="radio d-flex a-center j-center flex-shrink" style="width: 120rpx;" @click="doSelectAll">
+				<radio color="#FD6801" :checked="checkedAll" :disabled="disableSelectAll"></radio>
 			</label>
-			<view class="flex-1 d-flex a-center j-center font-md">
-				合计 <price>366</price>
-			</view>
-			<view class="flex-1 d-flex a-center j-center main-bg-color text-white font-md" hover-class="main-bg-hover-color">
-				结算
-			</view>
+			<template v-if=" !isEdit ">
+				<view class="flex-1 d-flex a-center j-center font-md">
+					合计 <price>{{totalPrice}}</price>
+				</view>
+				<view class="flex-1 d-flex a-center j-center main-bg-color text-white font-md" hover-class="main-bg-hover-color">
+					结算
+				</view>
+			</template>
+			<template v-else>
+				<view class="flex-1 d-flex a-center j-center font-md main-bg-color text-white">移入收藏</view>
+				<view class="flex-1 d-flex a-center j-center bg-danger font-md text-white" 
+					hover-class="main-bg-hover-color" @click="doDelProduct">删除</view>
+			</template>
 		</view>
+		
+		<!-- 属性筛选框 -->
+		<common-popup :popupClass="popupShow" @hide="doHidePopup">
+			<!-- 商品信息（275rpx）图片180*180 -->
+			<view class="d-flex a-center" style="height: 275rpx;">
+				<image src="/static/images/demo/list/1.jpg" mode="widthFix" 
+					style="width: 180rpx; height: 180rpx;" class="border rounded"></image>
+				<view class="pl-2">
+					<price priceSize="font-lg" unitSize="font">3369</price>
+					<view class="d-block">
+						<!-- 火焰红 64GB 标配 -->
+						<text class="mr-1" v-for="(attr, attrIndex) in popupData.attrs" :key="attrIndex">{{attr.list[attr.selected].name}}</text>
+					</view>
+				</view>
+			</view>
+			
+			<!-- 表单部分（660rpx） -->
+			<scroll-view scroll-y class="w-100" style="height: 660rpx;">
+				<card :headTitle="item.title" :headTitleWeight="false" :headBorderBottom="false"
+					v-for="(item, index) in popupData.attrs" :key="index"
+				>
+					<zcm-radio-group :label="item" :selected.sync="item.selected"></zcm-radio-group>
+				</card>
+				<view class="d-flex j-sb a-center p-2 border-top border-light-secondary">
+					<text>购买数量</text>
+					<uni-number-box :min="1" :value="popupData.num" @change="popupData.num = $event"></uni-number-box>
+				</view>
+			</scroll-view>
+			
+			<!-- 按钮（100rpx） -->
+			<view class="d-flex main-bg-color font-md a-center j-center text-white mt-2" hover-class="main-bg-hover-color"
+				style="height: 100rpx; margin-left: -30rpx; margin-right: -30rpx;" @tap.stop="doHidePopup"
+			>
+				确定
+			</view>
+			
+		</common-popup>
 	</view>
 </template>
 
@@ -63,61 +118,50 @@
 	import UniNavBar from "@/components/uni-ui/uni-nav-bar/uni-nav-bar.vue";
 	import Price from "@/components/common/price.vue";
 	import UniNumberBox from "@/components/uni-ui/uni-number-box/uni-number-box.vue";
+	import CommonPopup from "@/components/common/common-popup.vue";
+	import Card from "@/components/common/card.vue";
+	import ZcmRadioGroup from "@/components/common/radio-group.vue";
+	import { mapState, mapGetters, mapActions, mapMutations } from "vuex";
 	export default {
 		components: {
 			UniNavBar,
 			Price,
-			UniNumberBox
+			UniNumberBox,
+			CommonPopup,
+			Card,
+			ZcmRadioGroup
 		},
 		data() {
 			return {
-				isEdit: false,
-				list: [
-					{
-						checked: false,
-						id: '1',
-						title: "商品标题111",
-						cover: "/static/images/demo/list/1.jpg",
-						// 当前的商品属性
-						attrs: [
-							{
-								title: "颜色",
-								selected: 0,
-								list: [
-									{ name: "火焰红" },
-									{ name: "炭黑" },
-									{ name: "冰川蓝" }
-								]
-							}, {
-								title: "容量",
-								selected: 1,
-								list: [
-									{ name: "64GB" },
-									{ name: "128GB" }
-								]
-							}, {
-								title: "套餐",
-								selected: 2,
-								list: [
-									{ name: "标配" },
-									{ name: "套餐一" },
-									{ name: "套餐二" }
-								]
-							}
-						],
-						pPrice: 3699,
-						num: 1, // 选中的数量
-						minNum: 1,
-						maxNum: 10
-					}
-				]
+				isEdit: false
 			}
 		},
 		onLoad() {
-			console.log(JSON.stringify(this.$store.state))
-			console.log(JSON.stringify(this.$store.state.cart))
+			// console.log(JSON.stringify(this.$store.state))
+			// console.log(JSON.stringify(this.$store.state.cart))
+		},
+		computed: {
+			...mapState({
+				list: state => state.cart.list,
+				popupShow: state => state.cart.popupShow
+			}),
+			...mapGetters([
+				'checkedAll', 
+				'totalPrice',
+				'disableSelectAll',
+				'popupData'
+			])
 		},
 		methods: {
+			...mapActions([
+				'doSelectAll',
+				'doDelProduct',
+				'doShowPopup',
+				'doHidePopup'
+			]),
+			...mapMutations([
+				'selectItem'
+			]),
 			changeNum(e, item, index) {
 				item.num = Number(e);
 			}

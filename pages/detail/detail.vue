@@ -60,9 +60,9 @@
 		</card>
 		
 		<!-- 底部操作条 -->
-		<bottom-btn />
+		<bottom-btn @show="show('attr')" />
 		
-		<!-- 弹出框 -->
+		<!-- 属性筛选框 -->
 		<common-popup :popupClass="popup.attr" @hide="hide('attr')">
 			<!-- 商品信息（275rpx）图片180*180 -->
 			<view class="d-flex a-center" style="height: 275rpx;">
@@ -91,8 +91,8 @@
 			</scroll-view>
 			
 			<!-- 按钮（100rpx） -->
-			<view class="d-flex main-bg-color font-md a-center j-center text-white" hover-class="main-bg-hover-color"
-				style="height: 100rpx; margin-left: -30rpx; margin-right: -30rpx;" @tap.stop="hide('attr')"
+			<view class="d-flex main-bg-color font-md a-center j-center text-white mt-2" hover-class="main-bg-hover-color"
+				style="height: 100rpx; margin-left: -30rpx; margin-right: -30rpx;" @tap.stop="addCart"
 			>
 				加入购物车
 			</view>
@@ -165,6 +165,7 @@
 	import Price from "@/components/common/price.vue";
 	import ZcmRadioGroup from "@/components/common/radio-group.vue";
 	import UniNumberBox from "@/components/uni-ui/uni-number-box/uni-number-box.vue";
+	import { mapMutations } from "vuex";
 	var htmlString = `
 		<p>
 			<img src="https://i8.mifile.cn/v1/a1/9c3e29dc-151f-75cb-b0a5-c423a5d13926.webp">
@@ -242,9 +243,11 @@
 					{ src: '/static/images/demo/demo12.jpg'}
 				],
 				detail: {
+					id: '2008',
 					title: '小米MIX3 6GB+12GB',
+					cover: "/static/images/demo/list/4.jpg",
 					desc: '磁动力滑盖全面屏 / 前后旗舰AI双摄 / 四曲面彩色陶瓷机身 / 高效10W无线充电',
-					pprice: 3299,
+					pPrice: 3299,
 					num: 1,
 					max: 100
 				},
@@ -298,6 +301,24 @@
 			}
 		},
 		methods: {
+			...mapMutations([
+				'addCartFromDetail'
+			]),
+			// 加入购物车
+			addCart() {
+				// 组装数据（模拟）
+				var product = this.detail;
+				product['checked'] = false;
+				product['attrs'] = this.selects;
+				// 加入购物车
+				this.addCartFromDetail(product);
+				// 隐藏筛选框
+				this.hide('attr');
+				// 加入成功
+				uni.showToast({
+					title: '加入成功'
+				});
+			},
 			event() {
 				console.log("点击了轮播图")
 			},

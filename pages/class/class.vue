@@ -136,7 +136,7 @@
 			async onRightScroll(e) {
 				// value是数组中的值，key是索引
 				this.rightDomsTop.forEach((value, key) => {
-					if (value < e.detail.scrollTop) { // 如果value < 已滚动的距离
+					if (value < e.detail.scrollTop + 3) { // 如果value < 已滚动的距离，这里的 + 3 是为了解决bug
 						this.activeIndex = key;
 						return false;
 					}
