@@ -8,8 +8,9 @@
 			</slot>
 		</view>
 		<!-- body -->
-		<view class="">
+		<view class="" :style="bodyStyle">
 			<image v-if="bodyCover" :src="bodyCover" mode="widthFix"></image>
+			<!-- 默认插槽 -->
 			<slot />
 		</view>
 	</view>
@@ -18,6 +19,7 @@
 <script>
 	export default {
 		props: {
+			bodyStyle: String,
 			// 头部标题
 			headTitle: String,
 			// 封面图

@@ -105,10 +105,10 @@
 			
 			<!-- scroll-view -->
 			<scroll-view scroll-y class="w-100" style="height: 835rpx;">
-				<uni-list-item v-for="i in 10" :key="i">
-					<view class="iconfont icon-dingwei font-weight font-md">西文</view>
+				<uni-list-item v-for="(item, index) in list" :key="index">
+					<view class="iconfont icon-dingwei font-weight font-md">{{item.name}}</view>
 					<view class="font text-light-muted">
-						广东省广州市东圃镇
+						{{item.address + item.detailAddr}}
 					</view>
 				</uni-list-item>
 			</scroll-view>
@@ -165,7 +165,7 @@
 	import Price from "@/components/common/price.vue";
 	import ZcmRadioGroup from "@/components/common/radio-group.vue";
 	import UniNumberBox from "@/components/uni-ui/uni-number-box/uni-number-box.vue";
-	import { mapMutations } from "vuex";
+	import { mapState, mapMutations } from 'vuex';
 	var htmlString = `
 		<p>
 			<img src="https://i8.mifile.cn/v1/a1/9c3e29dc-151f-75cb-b0a5-c423a5d13926.webp">
@@ -299,6 +299,11 @@
 					}
 				]
 			}
+		},
+		computed: {
+			...mapState({
+				list: state => state.address.list
+			})
 		},
 		methods: {
 			...mapMutations([

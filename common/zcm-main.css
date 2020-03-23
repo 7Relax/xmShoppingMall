@@ -65,8 +65,8 @@ body {
 .text-right{ text-align: right; }
 
 /* box-sizing: border-box 如果有内边距的话就不会往外扩充 */
-.row { box-sizing: border-box!important; display: flex!important; flex-direction: row; flex-wrap: wrap;}
-[class*='col-'],[class*='span-'],[class*='span24-'] { min-height: 1px;box-sizing: border-box!important;}
+.row { box-sizing: border-box !important; display: flex !important; flex-direction: row; flex-wrap: wrap; }
+[class*='col-'],[class*='span-'],[class*='span24-'] { min-height: 1px; box-sizing: border-box!important; }
 /* 栅栏一 */
 .col-1{ width: 62.5upx; } 
 .col-2{ width: 125upx; } 
@@ -137,20 +137,24 @@ body {
 .flex-row{ flex-direction: row; }
 .flex-wrap{ flex-wrap: wrap; }
 .flex-nowrap{ flex-wrap: nowrap; }
-.flex-shrink{flex-shrink: 0;}
+.flex-shrink{ flex-shrink: 0; }
+/* 主轴方向对齐，初始值：flex-start */
 .j-start{ justify-content: flex-start; }
 .j-center{ justify-content: center; }
 .j-end{ justify-content: flex-end; }
 .j-sb{ justify-content: space-between; }
-.a-center{ align-items:center; }
+/* 交叉轴方向对齐，初始值：stretch */
 .a-start{ align-items: flex-start; }
+.a-center{ align-items: center; }
 .a-end{ align-items:flex-end; }
+/* stretch 拉伸来填满flex容器 */
 .a-stretch{ align-items: stretch; }
 .a-self-start{ align-self: flex-start; }
 .a-self-auto{ align-self: auto; }
 .a-self-end{ align-self: flex-end; }
 .a-self-stretch{ align-self:stretch; }
 .a-self-baseline{ align-self:baseline; }
+
 /* Border */
 .border{ border-width: 1upx; border-style: solid; border-color: var(--borderColor);}
 .border-top{ border-top-width: 1upx; border-top-style: solid; border-top-color: var(--borderColor); }

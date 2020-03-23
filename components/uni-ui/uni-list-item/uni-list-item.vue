@@ -8,18 +8,23 @@
 					<image :src="thumb" class="uni-list-item__icon-img" />
 				</view>
 				<view v-else-if="showExtraIcon" class="uni-list-item__icon">
-					<uni-icons :color="extraIcon.color" :size="extraIcon.size" :type="extraIcon.type" class="uni-icon-wrapper" />
+					<uni-icons v-if="!leftIcon" :color="extraIcon.color" :size="extraIcon.size" :type="extraIcon.type" class="uni-icon-wrapper" />
+					<view v-if="leftIcon" class="iconfont" :class="leftIcon" :style="leftIconStyle"></view>
 				</view>
 				<view class="uni-list-item__content">
+					<!-- 默认插槽 -->
 					<slot />
 					<text class="uni-list-item__content-title">{{ title }}</text>
 					<text v-if="note" class="uni-list-item__content-note">{{ note }}</text>
 				</view>
 				<view v-if="showBadge || showArrow || showSwitch" class="uni-list-item__extra" :style="'width:'+extraWidth+';'">
-					<text v-if="rightText" class="uni-list-item__extra-text">{{rightText}}</text>
-					<uni-badge v-if="showBadge" :type="badgeType" :text="badgeText" />
-					<switch v-if="showSwitch" :disabled="disabled" :checked="switchChecked" @change="onSwitchChange" />
-					<uni-icons v-if="showArrow" :size="20" class="uni-icon-wrapper" color="#bbb" type="arrowright" />
+					<!-- 自定插槽 -->
+					<slot name="right">
+						<text v-if="rightText" class="uni-list-item__extra-text">{{rightText}}</text>
+						<uni-badge v-if="showBadge" :type="badgeType" :text="badgeText" />
+						<switch v-if="showSwitch" :disabled="disabled" :checked="switchChecked" @change="onSwitchChange" />
+						<uni-icons v-if="showArrow" :size="20" class="uni-icon-wrapper" color="#bbb" type="arrowright" />
+					</slot>
 				</view>
 			</view>
 		</view>
@@ -59,6 +64,14 @@
 			uniBadge
 		},
 		props: {
+			leftIcon: {
+				type: String,
+				default: ''
+			},
+			leftIconStyle: {
+				type: String,
+				default: ''
+			},
 			extraWidth: {
 				type: String,
 				default: ''

@@ -77,7 +77,12 @@
         }
         ,{
             "path" : "pages/my/my",
-            "style" : {}
+            "style" : {
+				"app-plus": {
+					"titleNView": false,
+					"scrollIndicator": "none"
+				}
+			}
         }
         ,{
             "path" : "pages/detail/detail",
@@ -104,6 +109,50 @@
 				"app-plus": {
 					"bounce": "none",
 					"scrollIndicator": "none"
+				}
+			}
+        }
+        ,{
+            "path" : "pages/user-set/user-set",
+            "style" : {
+				"navigationBarTitleText": "用户设置"
+			}
+        }
+        ,{
+            "path" : "pages/user-userInfo/user-userInfo",
+            "style" : {
+				"navigationBarTitleText": "修改资料"
+			}
+        }
+        ,{
+            "path" : "pages/user-address-list/user-address-list",
+            "style" : {
+				"navigationBarTitleText": "收货地址",
+				"app-plus": {
+					"scrollIndicator": "none",
+					"bounce": "none",
+					"titleNView": {
+						"buttons": [
+							{
+								"float": "right",
+								"color": "#999999",
+								"colorPressed": "#BBBBBB",
+								"fontSrc": "/static/font/iconfont.ttf",
+								"text": "\ue626",
+								"fontSize": "15px"
+							}
+						]
+					}
+				}
+			}
+        }
+        ,{
+            "path" : "pages/user-address-edit/user-address-edit",
+            "style" : {
+				"navigationBarTitleText": "新增收获地址",
+				"app-plus": {
+					"scrollIndicator": "none",
+					"bounce": "none"
 				}
 			}
         }
