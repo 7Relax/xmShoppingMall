@@ -13,7 +13,7 @@ export default {
 				phone: '159****3720',
 				address: '广东省 广州市 黄埔区',
 				detailAddr: 'xxxx 街道',
-				isDefault: true,
+				isDefault: false,
 			},
 			{
 				name: 'Seven3',
@@ -24,6 +24,15 @@ export default {
 			},
 		]
 	},
+	getters: {
+		// 获取默认地址，defaultAddr是数组
+		defaultAddr: (state) => {
+			return state.list.filter(obj => {
+				return obj.isDefault
+			})
+		}
+	},
+	// mutations 中的方法不能互相调用，要借助 actions
 	mutations: {
 		// 创建收货地址
 		createAddr(state, item) {
@@ -45,6 +54,30 @@ export default {
 			for (let key in item) {
 				state.list[index][key] = item[key];
 			}
+		},
+		// 取消默认地址
+		removeDefault(state) {
+			state.list.forEach(obj => {
+				if (obj.isDefault) {
+					obj.isDefault = false;
+				}
+			})
+		}
+	},
+	actions: {
+		// 更新收货地址
+		updateAddrAction({commit}, obj) {
+			if (obj.item.isDefault) {
+				commit('removeDefault');
+			}
+			commit('updateAddr', obj);
+		},
+		// 新增收货地址
+		createAddrAction({commit}, obj) {
+			if (obj.isDefault) {
+				commit('removeDefault');
+			}
+			commit('createAddr', obj);
 		}
 	}
 }

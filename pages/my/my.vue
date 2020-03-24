@@ -26,7 +26,7 @@
 		<card>
 			<view slot="title" class="d-flex j-sb a-center">
 				<text class="font-md font-weight">我的订单</text>
-				<view class="text-secondary">
+				<view class="text-secondary" @click="navigate('order')">
 					全部订单<text class="iconfont icon-you font"></text>
 				</view>
 			</view>

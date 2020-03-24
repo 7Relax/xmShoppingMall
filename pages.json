@@ -149,11 +149,48 @@
         ,{
             "path" : "pages/user-address-edit/user-address-edit",
             "style" : {
-				"navigationBarTitleText": "新增收获地址",
+				"navigationBarTitleText": "新增收货地址",
 				"app-plus": {
 					"scrollIndicator": "none",
 					"bounce": "none"
 				}
+			}
+        }
+        ,{
+            "path" : "pages/order/order",
+            "style" : {
+				"navigationBarTitleText": "我的订单",
+				"app-plus": {
+					"scrollIndicator": "none",
+					"titleNView": {
+						"buttons": [
+							{
+								"float": "right",
+								"color": "#999999",
+								"colorPressed": "#BBBBBB",
+								"fontSrc": "/static/font/iconfont.ttf",
+								"text": "\ue60c",
+								"fontSize": "18px"
+							},
+							{
+								"float": "right",
+								"color": "#999999",
+								"colorPressed": "#BBBBBB",
+								"fontSrc": "/static/font/iconfont.ttf",
+								"text": "\ue6e3",
+								"fontSize": "18px"
+							}
+						]
+					}
+				}
+			}
+        }
+        ,{
+            "path" : "pages/order-confirm/order-confirm",
+            "style" : {
+				"navigationBarTitleText": "订单配送至",
+				"navigationBarBackgroundColor": "#FD6801",
+				"navigationBarTextStyle": "white"
 			}
         }
     ],

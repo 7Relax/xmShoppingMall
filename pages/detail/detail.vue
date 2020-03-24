@@ -105,17 +105,17 @@
 			
 			<!-- scroll-view -->
 			<scroll-view scroll-y class="w-100" style="height: 835rpx;">
-				<uni-list-item v-for="(item, index) in list" :key="index">
+				<uni-list-item v-for="(item, index) in addressList" :key="index">
 					<view class="iconfont icon-dingwei font-weight font-md">{{item.name}}</view>
 					<view class="font text-light-muted">
-						{{item.address + item.detailAddr}}
+						{{item.address}} {{item.detailAddr}}
 					</view>
 				</uni-list-item>
 			</scroll-view>
 			
 			<!-- 按钮（100rpx） -->
 			<view class="d-flex main-bg-color font-md a-center j-center text-white" hover-class="main-bg-hover-color"
-				style="height: 100rpx; margin-left: -30rpx; margin-right: -30rpx;" @tap.stop="hide('express')"
+				style="height: 100rpx; margin-left: -30rpx; margin-right: -30rpx;" @tap.stop="openCreateAddress"
 			>
 				选择新地址
 			</view>
@@ -302,7 +302,7 @@
 		},
 		computed: {
 			...mapState({
-				list: state => state.address.list
+				addressList: state => state.address.list
 			})
 		},
 		methods: {
@@ -323,6 +323,14 @@
 				uni.showToast({
 					title: '加入成功'
 				});
+			},
+			// 打开新增地址页面
+			openCreateAddress() {
+				uni.navigateTo({
+					url: '/pages/user-address-edit/user-address-edit'
+				});
+				// 关闭
+				this.hide('express');
 			},
 			event() {
 				console.log("点击了轮播图")

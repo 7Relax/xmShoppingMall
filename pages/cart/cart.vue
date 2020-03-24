@@ -49,12 +49,22 @@
 				</view>
 			</view>
 		</view>
+		
+		<!-- 为你推荐 -->
+		<view class="text-center font-md font-weight main-text-color mt-5">为你推荐</view>
+		<view class="position-relative d-flex j-center a-center text-secondary mb-3">
+			<view class="px-3" style="background-color: #F5F5F5; z-index: 2;">买的人还买了</view>
+			<view class="position-absolute" style="background-color: #DDDDDD; height: 2rpx; left: 0; right: 0;"></view>
+		</view>
+		<view class="row j-sb bg-white">
+			<common-list v-for="(item, index) in hotList" :key="index" :item="item"></common-list>
+		</view>
 	
 		<!-- 合计 -->
 		<!-- 占位 -->
 		<view style="height: 100rpx;"></view>
 		<!-- align-items: stretch; - y轴方向填充满 -->
-		<view class="d-flex a-center position-fixed left-0 right-0 bottom-0 border-top border-light-secondary a-stretch"
+		<view class="d-flex a-center position-fixed left-0 right-0 bottom-0 border-top border-light-secondary a-stretch bg-white"
 			style="height: 100rpx; z-index: 2000;"
 		>
 			<label class="radio d-flex a-center j-center flex-shrink" style="width: 120rpx;" @click="doSelectAll">
@@ -64,8 +74,8 @@
 				<view class="flex-1 d-flex a-center j-center font-md">
 					合计 <price>{{totalPrice}}</price>
 				</view>
-				<view class="flex-1 d-flex a-center j-center main-bg-color text-white font-md" hover-class="main-bg-hover-color">
-					结算
+				<view class="flex-1 d-flex a-center j-center main-bg-color text-white font-md"
+					hover-class="main-bg-hover-color" @tap="orderConfirm">结算
 				</view>
 			</template>
 			<template v-else>
@@ -109,8 +119,8 @@
 			>
 				确定
 			</view>
-			
 		</common-popup>
+		
 	</view>
 </template>
 
@@ -121,6 +131,7 @@
 	import CommonPopup from "@/components/common/common-popup.vue";
 	import Card from "@/components/common/card.vue";
 	import ZcmRadioGroup from "@/components/common/radio-group.vue";
+	import CommonList from "@/components/common/common-list.vue";
 	import { mapState, mapGetters, mapActions, mapMutations } from "vuex";
 	export default {
 		components: {
@@ -129,11 +140,27 @@
 			UniNumberBox,
 			CommonPopup,
 			Card,
-			ZcmRadioGroup
+			ZcmRadioGroup,
+			CommonList
 		},
 		data() {
 			return {
-				isEdit: false
+				isEdit: false,
+				hotList: [
+					{
+						cover: "/static/images/demo/list/4.jpg",
+						title: "米家空调",
+						desc: "1.5匹变频",
+						pPrice: 1399,
+						oPrice: 3699
+					},{
+						cover: "/static/images/demo/list/4.jpg",
+						title: "米家空调2",
+						desc: "1.5匹变频2",
+						pPrice: 1399,
+						oPrice: 3699
+					}
+				]
 			}
 		},
 		onLoad() {
@@ -164,6 +191,12 @@
 			]),
 			changeNum(e, item, index) {
 				item.num = Number(e);
+			},
+			// 订单结算
+			orderConfirm() {
+				uni.navigateTo({
+					url: '/pages/order-confirm/order-confirm'
+				});
 			}
 		}
 	}

@@ -5,7 +5,7 @@
 				:auto-close="false" @change="change" @click="bindClick($event, index)"
 				v-for="(item, index) in list" :key="index"
 			>
-				<view class="text-secondary p-3" style="width: 100%;">
+				<view class="text-secondary p-3 border-bottom border-light-secondary" style="width: 100%;" hover-class="bg-light-secondary" @click="choiceAddress(item, index)">
 					<view class="d-flex a-center">
 						<text class="main-text-color">{{item.name}}</text>
 						<text class="ml-1">{{item.phone}}</text>
@@ -47,6 +47,8 @@
 					}
 				}],
 				isOpened: false,
+				// type有两个值：update, choice
+				type: 'update',
 			}
 		},
 		// 监听导航栏按钮点击
@@ -67,6 +69,11 @@
 				}
 			})
 		},
+		onLoad(e) {
+			if (e.type) {
+				this.type = e.type;
+			}
+		},
 		methods: {
 			change(e) {
 				// this.isOpened = e
@@ -76,17 +83,10 @@
 				'deleteAddr'
 			]),
 			bindClick(e, addrIndex) {
-				// @click="bindClick($event)" 子组件 
 				console.log(e);
 				if (e.index === 0) {
 					// 修改收货地址
-					let obj = JSON.stringify({
-						index: addrIndex,
-						item: this.list[addrIndex]
-					});
-					uni.navigateTo({
-						url: '/pages/user-address-edit/user-address-edit?data='+obj
-					});
+					this.updateAddr(addrIndex);
 				} else if (e.index === 1) {
 					// 删除
 					uni.showModal({
@@ -102,6 +102,28 @@
 					});
 				}
 			},
+			choiceAddress(item, addrIndex) {
+				if (this.type === 'choice') {
+					// 通知订单提交页修改收货地址
+					uni.$emit('choiceAddr', item);
+					// 返回上一页
+					uni.navigateBack({
+						delta: 1
+					})
+				} else if (this.type === 'update') {
+					this.updateAddr(addrIndex);
+				}
+			},
+			// 修改收货地址
+			updateAddr(addrIndex) {
+				let obj = JSON.stringify({
+					index: addrIndex,
+					item: this.list[addrIndex]
+				});
+				uni.navigateTo({
+					url: '/pages/user-address-edit/user-address-edit?data='+obj
+				});
+			}
 		}
 	}
 </script>

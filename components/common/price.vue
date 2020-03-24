@@ -1,5 +1,5 @@
 <template>
-	<view class="d-flex main-text-color line-h" :class="priceSize">
+	<view class="d-flex line-h" :class="[priceSize, color]">
 		<text class="a-self-start" :class="unitSize">￥</text><slot />
 	</view>
 </template>
@@ -15,6 +15,10 @@
 				type: String,
 				default: "font-sm"
 			},
+			color: {
+				type: String,
+				default: "main-text-color"
+			}
 		}
 	}
 </script>

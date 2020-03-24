@@ -40,7 +40,7 @@
 
 <script>
 	import CityPicker from "@/components/uni-ui/mpvue-citypicker/mpvueCityPicker.vue"
-	import { mapMutations } from "vuex"
+	import { mapActions } from "vuex"
 	export default {
 		components: {
 			CityPicker
@@ -98,13 +98,13 @@
 				this.$refs.cityPicker.show();
 			},
 			// 引入
-			...mapMutations(['createAddr', 'updateAddr']),
+			...mapActions(['createAddrAction', 'updateAddrAction']),
 			// 提交
 			submit() {
 				// TODO 验证表单
 				if (this.isEdit) {
 					// 修改
-					this.updateAddr({
+					this.updateAddrAction({
 						index: this.currentIndex,
 						item: this.form
 					})
@@ -114,7 +114,7 @@
 					}, 500);
 				} else {
 					// 新增收获地址
-					this.createAddr(this.form);
+					this.createAddrAction(this.form);
 					// 创建成功
 					uni.showToast({ title: '创建成功' });
 					// 返回上一页
