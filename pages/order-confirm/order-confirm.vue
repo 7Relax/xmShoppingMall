@@ -55,8 +55,8 @@
 			</uni-list-item>
 			<divider />
 			
-			<uni-list-item title="发票">
-				<view slot="rightContent" class="">电子发票-个人</view>
+			<uni-list-item title="发票" @click="openOrderInvoice">
+				<view slot="rightContent">电子发票-个人</view>
 			</uni-list-item>
 		</view>
 	
@@ -106,6 +106,11 @@
 				uni.navigateTo({
 					url: '/pages/user-address-list/user-address-list?type=choice'
 				});
+			},
+			openOrderInvoice() {
+				uni.navigateTo({
+					url: '/pages/order-invoice/order-invoice'
+				})
 			}
 		}
 	}

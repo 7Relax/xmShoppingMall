@@ -193,6 +193,12 @@
 				"navigationBarTextStyle": "white"
 			}
         }
+        ,{
+            "path" : "pages/order-invoice/order-invoice",
+            "style" : {
+				"navigationBarTitleText": "发票"
+			}
+        }
     ],
 	// 全局配置
 	"globalStyle": {
