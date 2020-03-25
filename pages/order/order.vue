@@ -132,6 +132,6 @@
 .tabActive {
 	border-bottom: 5rpx solid #FD6801;
 	color: #FD6801;
-	margin-bottom: -5rpx;
+	/* margin-bottom: -5rpx; */
 }
 </style>

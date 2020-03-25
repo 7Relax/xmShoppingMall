@@ -1,5 +1,9 @@
 <template>
-	<view style="background: #F5F5F5;">
+	<view class="animated fadeIn faster" style="background: #F5F5F5;">
+		
+		<!-- 提高用户体验 -->
+		<loading-plus v-if="beforeReady" />
+		
 		<uni-nav-bar :right-text="isEdit ? '完成' : '编辑' " 
 			title="购物车" fixed statusBar @clickRight=" isEdit = ! isEdit ">
 		</uni-nav-bar>
@@ -125,6 +129,7 @@
 </template>
 
 <script>
+	import loading from "@/common/mixin/loading.js";
 	import UniNavBar from "@/components/uni-ui/uni-nav-bar/uni-nav-bar.vue";
 	import Price from "@/components/common/price.vue";
 	import UniNumberBox from "@/components/uni-ui/uni-number-box/uni-number-box.vue";
@@ -134,6 +139,7 @@
 	import CommonList from "@/components/common/common-list.vue";
 	import { mapState, mapGetters, mapActions, mapMutations } from "vuex";
 	export default {
+		mixins: [loading],
 		components: {
 			UniNavBar,
 			Price,
@@ -162,10 +168,6 @@
 					}
 				]
 			}
-		},
-		onLoad() {
-			// console.log(JSON.stringify(this.$store.state))
-			// console.log(JSON.stringify(this.$store.state.cart))
 		},
 		computed: {
 			...mapState({

@@ -10,9 +10,13 @@ Vue.config.productionTip = false
 import divider from '@/components/common/divider.vue'
 Vue.component('divider', divider)
 
-// 引入全局加载动画
-import loading from '@/components/common/loading.vue'
-Vue.component('loading', loading)
+// 引入全局加载动画 --- test
+// import loading from '@/components/common/loading.vue'
+// Vue.component('loading', loading)
+
+// 引入全局加载loading
+import loadingPlus from '@/common/mixin/loading-plus.vue'
+Vue.component('loading-plus', loadingPlus)
 
 App.mpType = 'app'
 

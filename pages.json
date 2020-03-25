@@ -209,6 +209,36 @@
 				}
 			}
         }
+        ,{
+            "path" : "pages/msg-list/msg-list",
+            "style" : {
+				"navigationBarTitleText": "消息列表"
+			}
+        }
+        ,{
+            "path" : "pages/msg-detail/msg-detail",
+            "style" : {
+				"navigationBarTitleText": "消息详情页"
+			}
+        }
+        ,{
+            "path" : "pages/payment/payment",
+            "style" : {
+				"navigationBarTitleText": "选择支付方式"
+			}
+        }
+        ,{
+            "path" : "pages/pay-result/pay-result",
+            "style" : {
+				"navigationBarTitleText": "支付结果"
+			}
+        }
+        ,{
+            "path" : "pages/order-coupon/order-coupon",
+            "style" : {
+				"navigationBarTitleText": "优惠券"
+			}
+        }
     ],
 	// 全局配置
 	"globalStyle": {

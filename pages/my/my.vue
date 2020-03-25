@@ -1,11 +1,17 @@
 <template>
-	<view>
+	<view class="animated fadeIn faster">
+		<!-- 提高用户体验 -->
+		<loading-plus v-if="beforeReady" />
 		<!-- 头部 -->
 		<view class="position-relative d-flex a-center" style="height: 320rpx;">
+			<!-- 背景图 -->
 			<image src="/static/images/bg.jpg" style="width: 100%; height: 320rpx;"></image>
-			<view class="iconfont icon-xiaoxi position-absolute text-white" 
-				style="font-size: 50rpx; top: 75rpx; right: 20rpx; z-index: 100;">
-			</view>
+			<!-- 消息列表 -->
+			<navigator url="/pages/msg-list/msg-list">
+				<view class="iconfont icon-xiaoxi position-absolute text-white" 
+					style="font-size: 50rpx; top: 75rpx; right: 20rpx; z-index: 100;">
+				</view>
+			</navigator>
 			
 			<view class="d-flex a-center position-absolute left-0 right-0" style="bottom: 50rpx;">
 				<!-- 头像 -->
@@ -57,16 +63,17 @@
 </template>
 
 <script>
+	import loading from "@/common/mixin/loading.js";
 	import Card from "@/components/common/card.vue"
 	import UniListItem from "@/components/uni-ui/uni-list-item/uni-list-item.vue"
 	export default {
+		mixins: [loading],
 		components: {
 			Card,
 			UniListItem
 		},
 		data() {
 			return {
-				
 			}
 		},
 		methods: {

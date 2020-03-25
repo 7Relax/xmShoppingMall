@@ -128,12 +128,11 @@ export default {
 		},
 		// 合计
 		totalPrice: (state) => {
-			console.log("totalPrice 1 ...")
+			console.log("getters >> totalPrice() ")
 			var total = 0;
 			state.list.forEach( obj => {
-				console.log("totalPrice 2 ... obj = ", obj)
 				if ( state.selectedList.indexOf(obj.id) > -1 ) {
-					console.log("totalPrice 3 ... l : ", state.selectedList)
+					// TODO 考虑精度丢失问题
 					total += obj.pPrice * obj.num
 				}
 			})

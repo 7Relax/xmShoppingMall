@@ -1,7 +1,9 @@
 <template>
-	<view class="d-flex border-top border-light-secondary" style="height: 100%; box-sizing: border-box;">
+	<view class="d-flex border-top border-light-secondary animated fadeIn faster"
+		style="height: 100%; box-sizing: border-box;">
 		
-		<loading :show="showLoading"></loading>
+		<!-- 提高用户体验 -->
+		<loading-plus v-if="beforeReady" />
 		
 		<scroll-view id="leftScroll" scroll-y style="flex: 1; height: 100%;" class="border-right border-light-secondary" :scroll-top="leftScrollTop">
 			<view class="border-bottom border-light-secondary py-1 left-scroll-item" v-for="(item, index) in cate" :key="index">
@@ -24,7 +26,9 @@
 </template>
 
 <script>
+	import loading from "@/common/mixin/loading.js";
 	export default {
+		mixins: [loading],
 		data() {
 			return {
 				// 默认显示加载动画

@@ -43,9 +43,11 @@
 				<view slot="rightContent">包邮</view>
 			</uni-list-item>
 			
-			<uni-list-item title="优惠券">
-				<view slot="rightContent" class="text-light-muted">无可用</view>
-			</uni-list-item>
+			<navigator url="/pages/order-coupon/order-coupon">
+				<uni-list-item title="优惠券">
+					<view slot="rightContent" class="text-light-muted" >无可用</view>
+				</uni-list-item>
+			</navigator>
 			
 			<uni-list-item :showArrow="false">
 				<view class="main-text-color">小计</view>
@@ -63,7 +65,9 @@
 		<view class="d-flex j-end a-center position-fixed left-0 right-0 bottom-0 border-top border-light-secondary bg-white p-2 fond-md">
 			<text>合计：</text>
 			<price>1399.00</price>
-			<view class="px-2 py-1 main-bg-color text-white fond-md ml-2" style="border-radius: 50rpx;" hover-class="main-bg-hover-color">去支付</view>
+			<view class="px-5 py-1 main-bg-color text-white fond-md ml-2" 
+				style="border-radius: 50rpx;" hover-class="main-bg-hover-color"
+				@click="openPayment">去支付</view>
 		</view>
 	</view>
 </template>
@@ -111,6 +115,11 @@
 				uni.navigateTo({
 					url: '/pages/order-invoice/order-invoice'
 				})
+			},
+			openPayment() {
+				uni.navigateTo({
+					url: '/pages/payment/payment'
+				});
 			}
 		}
 	}

@@ -38,10 +38,10 @@ body {
 .bottom-0{ bottom: 0; }
 .right-0{ right: 0; }
 /* 宽高 */
-.w-100{ width: 100%;}
-.w-50{ width: 50%;}
-.h-100{ height: 1250upx;}
-.h-50{ width: 625upx; }
+.w-100{ width: 100%; }
+.w-50{ width: 50%; }
+.h-100{ height: 1250upx; }
+.h-50{ height: 625upx; }
 /* 字体 */
 .font{ font-size: 25upx; }
 .font-sm{ font-size: 22upx; }

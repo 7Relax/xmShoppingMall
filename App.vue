@@ -19,6 +19,7 @@
 	@import url("/common/animate.css");
 	/* 自定义图标库 */
 	@import url("/common/icon.css");
+	@import url("/common/icon-plus.css");
 	/* ui基础库 */
 	@import url("/common/zcm-main.css");
 	/* 公共样式 */
