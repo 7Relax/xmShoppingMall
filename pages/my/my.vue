@@ -12,7 +12,7 @@
 				<image src="/static/images/demo/demo6.jpg" style="width: 145rpx; height: 145rpx; border: 5rpx solid;" 
 					class="rounded-circle border-light ml-4"></image>
 				<!-- 昵称 -->
-				<view class="ml-2 text-white font-md">测试昵称</view>
+				<view class="ml-2 text-white font-md" @click="loginTest">测试昵称</view>
 				<!-- 积分 -->
 				<view class="d-flex j-center a-center a-self-end ml-auto px-2" 
 					style="height: 70rpx; background: #FFD43F; color: #CC4A00; border-top-left-radius: 40rpx; border-bottom-left-radius: 40rpx;"
@@ -74,6 +74,11 @@
 				if (!path) { return; }
 				uni.navigateTo({
 					url: `/pages/${path}/${path}`
+				});
+			},
+			loginTest() {
+				uni.navigateTo({
+					url: '/pages/login/login'
 				});
 			}
 		}

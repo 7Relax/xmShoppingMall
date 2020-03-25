@@ -18,3 +18,5 @@ image { width: 100%; }
 .main-text-color { color: #FD6801; }
 /* 主边框颜色（浅灰色）*/
 .main-border-color { border-color: #F1F1F1; }
+/* input入焦主颜色（橙色）*/
+.input-border-color { border-color: #FD6801; }

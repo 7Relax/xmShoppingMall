@@ -199,6 +199,16 @@
 				"navigationBarTitleText": "发票"
 			}
         }
+        ,{
+            "path" : "pages/login/login",
+            "style" : {
+				"app-plus": {
+					"bounce": "none",
+					"scrollIndicator": "none",
+					"titleNView": false
+				}
+			}
+        }
     ],
 	// 全局配置
 	"globalStyle": {
