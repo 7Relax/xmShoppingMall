@@ -59,7 +59,9 @@
 								createTime: "2020-03-20 16:20",
 								status: "已发货",
 								order_items: [
-									{ cover: "/static/images/demo/demo6.jpg", title: "小米8", price: "1999.00", attrs: "金色 标配", num: 1}
+									{ cover: "/static/images/demo/demo6.jpg", title: "小米7", price: "999.00", attrs: "金色 标配", num: 1},
+									{ cover: "/static/images/demo/demo6.jpg", title: "小米8", price: "1999.00", attrs: "金色 标配", num: 1},
+									{ cover: "/static/images/demo/demo6.jpg", title: "小米9", price: "2999.00", attrs: "金色 标配", num: 1}
 								],
 								totalNum: 3,
 								totalPrice: 3999.00
@@ -70,8 +72,17 @@
 								order_items: [
 									{ cover: "/static/images/demo/demo6.jpg", title: "小米8", price: "1999.00", attrs: "金色 标配", num: 1}
 								],
-								totalNum: 3,
-								totalPrice: 3999.00
+								totalNum: 1,
+								totalPrice: 1999.00
+							},
+							{
+								createTime: "2020-03-20 16:20",
+								status: "已发货",
+								order_items: [
+									{ cover: "/static/images/demo/demo6.jpg", title: "小米8", price: "1999.00", attrs: "金色 标配", num: 1}
+								],
+								totalNum: 1,
+								totalPrice: 2999.00
 							}
 						]
 					},

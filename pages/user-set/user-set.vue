@@ -32,7 +32,7 @@
 					{
 						label: '关于',
 						value: [
-							{ title: '关于商城', path: '' },
+							{ title: '关于商城', path: 'about' },
 							{ title: '意见反馈', path: '' },
 							{ title: '协议规则', path: '' },
 							{ title: '资质证件', path: '' },

@@ -57,7 +57,8 @@
 		<divider />
 		<!-- <uni-list-item title="更多设置" showExtraIcon leftIcon="icon-icon_set_up" leftIconStyle="color: #808C98;" @click="navigate('user-set')"></uni-list-item> -->
 		<!-- <uni-list-item title="更多设置" showExtraIcon leftIcon="icon-icon_set_up" leftIconStyle="color: #808C98;" @click="navigate('user-userInfo')"></uni-list-item> -->
-		<uni-list-item title="更多设置" showExtraIcon leftIcon="icon-icon_set_up" leftIconStyle="color: #808C98;" @click="navigate('user-address-list')"></uni-list-item>
+		<!-- <uni-list-item title="更多设置" showExtraIcon leftIcon="icon-icon_set_up" leftIconStyle="color: #808C98;" @click="navigate('user-address-list')"></uni-list-item> -->
+		<uni-list-item title="更多设置" showExtraIcon leftIcon="icon-icon_set_up" leftIconStyle="color: #808C98;" @click="navigate('user-set')"></uni-list-item>
 		
 	</view>
 </template>

@@ -87,7 +87,7 @@
         ,{
             "path" : "pages/detail/detail",
             "style" : {
-				"navigationStyle":"custom",
+				"navigationStyle": "custom",
 				"app-plus": {
 					"scrollIndicator": "none",
 					"bounce": "none",
@@ -237,6 +237,36 @@
             "path" : "pages/order-coupon/order-coupon",
             "style" : {
 				"navigationBarTitleText": "优惠券"
+			}
+        }
+        ,{
+            "path" : "pages/order-detail/order-detail",
+            "style" : {
+				"app-plus": {
+					"bounce": "none",
+					"scrollIndicator": "none",
+					"titleNView": {
+						"type": "transparent"
+					}
+				}
+			}
+        }
+        ,{
+            "path" : "pages/logistics-detail/logistics-detail",
+            "style" : {
+				"navigationBarTitleText": "物流信息"
+			}
+        }
+        ,{
+            "path" : "pages/after-sale/after-sale",
+            "style" : {
+				"navigationBarTitleText": "申请售后"
+			}
+        }
+        ,{
+            "path" : "pages/about/about",
+            "style" : {
+				"navigationBarTitleText": "关于商城"
 			}
         }
     ],
