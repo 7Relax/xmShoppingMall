@@ -1,0 +1,23 @@
+<template>
+	<div>
+		<div class="flex-row">
+			<text class="font" style="color: #FD6801;">￥</text>
+			<text class="" style="color: #FD6801; font-size: 32px;">
+				<slot />
+			</text>
+		</div>
+	</div>
+</template>
+
+<script>
+	export default {
+		props: {
+			
+		}
+	}
+</script>
+
+<style src="@/common/zcm-main-nvue.css"></style>
+<style>
+
+</style>

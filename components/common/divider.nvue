@@ -1,0 +1,19 @@
+<template>
+	<div>
+		<!-- 加 w-100 是为了防止在ios端有可能会显示不全 -->
+		<div class="divider w-100"></div>
+	</div>
+</template>
+
+<script>
+	export default {
+		
+	}
+</script>
+
+<style scoped>
+	.divider {
+		height: 18px;
+		background-color: #F5F5F5;
+	}
+</style>

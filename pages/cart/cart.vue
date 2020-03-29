@@ -157,14 +157,14 @@
 						cover: "/static/images/demo/list/4.jpg",
 						title: "米家空调",
 						desc: "1.5匹变频",
-						pPrice: 1399,
-						oPrice: 3699
+						pprice: 1399,
+						oprice: 3699
 					},{
 						cover: "/static/images/demo/list/4.jpg",
 						title: "米家空调2",
 						desc: "1.5匹变频2",
-						pPrice: 1399,
-						oPrice: 3699
+						pprice: 1399,
+						oprice: 3699
 					}
 				]
 			}

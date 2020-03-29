@@ -12,7 +12,8 @@
 <script>
 	export default {
 		props: {
-			indexNavs: Array
+			// indexNavs: Array,
+			indexNavs: Object,
 		},
 		methods: {
 			event(item) {

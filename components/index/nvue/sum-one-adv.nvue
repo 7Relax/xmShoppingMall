@@ -1,0 +1,24 @@
+<template>
+	<div>
+		<div class="w-100">
+			<div class="p-2 border-bottom">
+				<text class="text-dark font-md font-weight">{{item.title}}</text>
+			</div>
+			<div>
+				<image :src="item.cover" style="height: 300px;" class="w-100"></image>
+			</div>
+		</div>
+	</div>
+</template>
+
+<script>
+	export default {
+		props: {
+			item: Object
+		}
+	}
+</script>
+
+<style src="@/common/zcm-main-nvue.css"></style>
+<style>
+</style>

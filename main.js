@@ -6,7 +6,7 @@ Vue.prototype.$store = store
 
 Vue.config.productionTip = false
 
-// 引入全局组件
+// 引入全局组件（nvue组件不能引入）
 import divider from '@/components/common/divider.vue'
 Vue.component('divider', divider)
 

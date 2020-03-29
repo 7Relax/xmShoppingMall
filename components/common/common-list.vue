@@ -6,9 +6,9 @@
 			<text class="d-block font text-light-muted">{{item.desc}}</text>
 			<view class="d-flex my-1">
 				<!-- 价格 -->
-				<price>{{item.pPrice}}</price>
+				<price>{{item.pprice}}</price>
 				<!-- 原价 -->
-				<view class="font-sm text-light-muted line-through ml-1 a-self-end line-h">￥{{item.oPrice}}</view>
+				<view class="font-sm text-light-muted line-through ml-1 a-self-end line-h">￥{{item.oprice}}</view>
 			</view>
 		</view>
 	</view>

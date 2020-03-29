@@ -15,7 +15,8 @@
 <script>
 	export default {
 		props: {
-			swiperData: Array,
+			// swiperData: Array,
+			swiperData: Object,
 			height: {
 				type: String,
 				default: "350"
@@ -31,12 +32,20 @@
 				return `height: ${this.height}rpx`; // rpx兼容性好
 			},
 			getUrls() {
-				return this.swiperData.map(obj => obj.src)
+				// return this.swiperData.map(obj => obj.src);
+				
+				console.log(this.swiperData);
+				var arr = [];
+				for (var i in this.swiperData) {
+					arr.push(this.swiperData[i].src);
+				}
+				return arr;
 			}
 		},
 		methods: {
 			// 点击了图片
 			event(item, index) {
+				console.log(item, index)
 				if (this.preview) {
 					return uni.previewImage({
 						current: index,

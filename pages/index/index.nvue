@@ -1,0 +1,284 @@
+<template>
+	<div>
+		<!-- 横向滚动顶部选项卡 -->
+		<sum-tabbar :tabIndex="tabIndex" :tabBars="tabBars" @tabchange="tabChange" />
+		<!-- 横向滚动列表 -->
+		<!-- 这里的flex-1：占满剩余的空间，这样就不用向index.vue里那样动态计算高度了（因为nvue中div默认是flex窗口且方向为column）-->
+		<slider class="flex-1" :index="tabIndex" :infinite="false" @change="sliderChange">
+			<!-- show-scrollbar: 隐藏滚动条-->
+			<list :show-scrollbar="false" v-for="(list, listIndex) in newsItems" :key="listIndex">
+				<!-- 下拉刷新 -->
+				<refresh class="w-100 flex-row j-center a-center" style="height: 80px;" 
+					:display="list.refreshShow" @refresh="refresh" @pullingdown="pullingDown">
+					<text class="font-md text-muted">{{list.refreshText}}</text>
+				</refresh>
+				
+				<template v-if="list.data.length > 0 && list.firstLoad === 'after'">
+					<!-- 首页模板 -->
+					<template v-if="tabBars[listIndex].template === 'index'">
+						<cell v-for="(listItem, itemIndex) in list.data" :key="itemIndex">
+							<!-- 轮播图组件 -->
+							<sum-slider v-if="listItem.type === 'swiper'" :swipers="listItem.data"></sum-slider>
+							
+							<!-- 图标分类组件 -->
+							<template v-if="listItem.type === 'indexnavs'">
+								<sum-index-navs :indexNavs="listItem.data" />
+								<!-- 分割线 -->
+								<divider />
+							</template>
+							
+							<!-- 三图广告 -->
+							<template v-if="listItem.type === 'threeAdv'">
+								<sum-three-adv :threeAdv="listItem.data"/>
+								<!-- 分割线 -->
+								<divider />
+							</template>
+							
+							<!-- 大图广告 -->
+							<!-- <sum-one-adv v-if="listItem.type === 'oneAdv'" :item="listItem.data"/> -->
+							
+							<!-- 公共列表组件 -->
+							<div class="w-100 row" v-if="listItem.type === 'list'">
+								<block v-for="(item, index) in listItem.data" :key="index">
+									<common-list :item="item" />
+								</block>
+							</div>
+						</cell>
+					</template>
+					<!-- 专题页 -->
+					<template v-else-if="tabBars[listIndex].template === 'special'">
+						<cell v-for="(listItem, itemIndex) in list.data" :key="itemIndex">
+							<!-- 轮播图组件 -->
+							<sum-slider v-if="listItem.type === 'swiper'" :swipers="listItem.data"></sum-slider>
+							
+							<!-- 图标分类组件 -->
+							<template v-if="listItem.type === 'indexnavs'">
+								<sum-index-navs :indexNavs="listItem.data" />
+							</template>
+							
+							<!-- 公共列表组件 -->
+							<div class="w-100" v-if="listItem.type ==='list'">
+								<div class="p-2">
+									<text class="text-dark font-md font-weight">热卖爆品</text>
+								</div>
+								<div class="w-100 row">
+									<block v-for="(item, index) in listItem.data" :key="index">
+										<common-list :item="item" />
+									</block>
+								</div>
+							</div>
+						</cell>
+					</template>
+				</template>
+				<!-- 加载中 -->
+				<template v-else-if="list.firstLoad === 'ing'">
+					<cell class="j-center a-center">
+						<text class="text-light-muted font-md mt-5">加载中...</text>
+					</cell>
+				</template>
+				<!-- 空数据 -->
+				<template v-else>
+					<cell class="j-center a-center">
+						<text class="text-light-muted font-md mt-5">暂无数据</text>
+					</cell>
+				</template>
+				
+				<!-- 上拉加载 -->
+				<loading class="w-100 flex-row j-center a-center" style="height: 80px;"
+					@loading="onLoading" :display="list.loadingShow">
+					<text class="font-md text-muted">Loading ...</text>
+				</loading>
+			</list>
+			
+		</slider>
+	</div>
+</template>
+
+<script>
+	import $H from "@/common/lib/request.js"
+	import sumTabbar from "@/components/index/nvue/sum-tabbar.nvue";
+	import sumSlider from "@/components/index/nvue/sum-slider.nvue";
+	import sumIndexNavs from "@/components/index/nvue/sum-index-navs.nvue";
+	import divider from "@/components/common/divider.nvue";
+	import sumThreeAdv from "@/components/index/nvue/sum-three-adv.nvue";
+	import sumOneAdv from "@/components/index/nvue/sum-one-adv.nvue";
+	import commonList from "@/components/common/common-list.nvue";
+	// 获取当前窗口对象
+	const currentWebview = plus.webview.currentWebview();
+	export default {
+		components: {
+			sumTabbar,
+			sumSlider,
+			sumIndexNavs,
+			divider,
+			sumThreeAdv,
+			sumOneAdv,
+			commonList
+		},
+		data() {
+			return {
+				tabIndex: 0,
+				tabBars: [],
+				newsItems: [],
+			}
+		},
+		created() {
+			// 监听当前窗口显示（因为nvue生命周期暂时无onShow）
+			currentWebview.addEventListener('show', e => {
+				console.log("index show....");
+			})
+			// 初始化数据
+			this.__init();
+		},
+		beforeDestroy() {
+			// 移除监听事件
+			currentWebview.removeEventListener('show', e => {})
+		},
+		methods: {
+			// 初始化
+			async __init() {
+				console.log("index >> __init ...");
+				// 请求后台是异步的操作，加上await就可以变成同步
+				// 使用一
+				// let data = await $H.get('/index_category/data');
+				// console.log(data);
+				// if (data) {
+				// 	this.tabBars = data.category;
+				// 	this.newsItems = this.setNewsItems(data);
+				// }
+				// 使用二
+				$H.get('/index_category/data').then(data => {
+					console.log(data);
+					// 初始化tabBars
+					this.tabBars = data.category;
+					// 初始化页面
+					this.newsItems = this.setNewsItems(data);
+				});
+			},
+			// 初始化首页
+			setNewsItems(e) {
+				let arr = [];
+				// 拿到tabBars的长度，根据长度生成页面
+				for (var i=0; i<this.tabBars.length; i++) {
+					// 设置首屏已经加载完成
+					let firstLoad = i === 0 ? 'after' : 'before';
+					// 数据模板
+					let itemObj = {
+						refreshShow: 'hide',
+						refreshText: '下拉可刷新',
+						loadingShow: 'hide',
+						data: [], // 当前页面所有数据
+						firstLoad: firstLoad
+					};
+					// 首屏初始化数据
+					if (this.tabBars[i].template === 'index') {
+						itemObj.data = e.data;
+					}
+					arr.push(itemObj);
+				}
+				return arr;
+			},
+			// 点击选项卡
+			tabChange(index) {
+				this.tabIndex = index;
+			},
+			// 监听横向滚动列表事件
+			sliderChange(e) {
+				this.tabIndex = e.index;
+				// before代表之前未请求过
+				if ( this.newsItems[this.tabIndex].firstLoad === 'before' ) {
+					this.addData();
+				}
+			},
+			// 判断下拉刷新状态
+			pullingDown(e) {
+				if (e.pullingDistance > e.viewHeight) {
+					this.refreshText = '释放就能刷新咯';
+				} else {
+					this.refreshText = '下拉可以刷新';
+				}
+			},
+			// 执行刷新
+			refresh(e) {
+				// 存储当前索引
+				let index = this.tabIndex;
+				this.newsItems[index].refreshShow = 'show';
+				this.newsItems[index].refreshText = '正在刷新... ';
+				this.addData(() => {
+					uni.showToast({ title: '刷新成功', icon: 'none' });
+					this.newsItems[index].refreshShow = 'hide';
+					this.newsItems[index].refreshText = '下拉可以刷新';
+				}, true)
+			},
+			// 上拉加载事件
+			onLoading() {
+				// 存储当前索引
+				let index = this.tabIndex;
+				this.newsItems[index].loadingShow = 'show';
+				// 没有更多数据
+				if (this.newsItems[index].loadingText === '没有更多了') {
+					uni.showToast({ title: '没有更多了', icon: 'none' });
+					this.$nextTick(() => {
+						this.newsItems[index].loadingShow = 'hide';
+					})
+					return;
+				}
+				// 加载数据的时候传一个回调函数进去
+				this.addData(() => {
+					uni.showToast({ title: '加载成功', icon: 'none' });
+					this.newsItems[index].loadingShow = 'hide';
+				});
+			},
+			// 加载数据/刷新数据
+			async addData(callback = false, refresh = false) { 
+				// 拿到当前索引（申明变量e接收是为了防止用户滑动太快）
+				let e = this.tabIndex;
+				// 拿到当前分类id
+				let id = this.tabBars[e].id;
+				// 拿到当前分类的分页数page
+				let page = !refresh ? (Math.ceil(this.newsItems[e].data.length / 5) + 1) : 1
+				console.log("id = ",id, ", page =",page);
+				// 修改请求状态，加载中
+				if (page === 1 && this.newsItems[e].refreshShow === 'hide') {
+					this.newsItems[e].firstLoad = 'ing'; 
+				}
+				let data = await $H.get('/index_category/'+id+'/data/'+page);
+				// 修改请求状态，加载完成
+				if (page === 1 && this.newsItems[e].refreshShow === 'hide') {
+					this.newsItems[e].firstLoad = 'after';
+				}
+				// 成功
+				if (data) {
+					let data = result.data.data;
+					// 赋值渲染
+					this.newsItems[e].data = !refresh ? [...this.newsItems[e].data, ...data] : [...data];
+					// 执行回调
+					if (typeof callback == 'function') {
+						// 执行回调函数
+						callback();
+					}
+					// 没有更多了
+					if (data.length < 5) { this.newsItems[e].loadingText = '没有更多了'; return; }
+				}
+			}
+		}
+	}
+</script>
+
+<style src="@/common/zcm-main-nvue.css"></style>
+<style>
+	.slider, .image {
+		width: 750px;
+		height: 300px;
+	}
+	.indicator {
+		position: absolute;
+		right: 0;
+		bottom: 0;
+		width: 150px;
+		height: 50px;
+		background-color: rgba(0, 0, 0, 0);
+		item-color: rgba(255, 255, 255, 0.5);
+		item-selected-color: #FFFFFF;
+	}
+</style>

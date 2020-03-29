@@ -1,0 +1,68 @@
+<template>
+	<div class="w-100" style="height: 75px;">
+		<!-- scroller 加 flex-row，是因为默认是column布局 -->
+		<scroller class="w-100 flex-row" style="height: 75px;" :show-scrollbar="false" scroll-direction="horizontal">
+			<div style="height: 75px; width: 120px;" class="j-center a-center"
+				v-for="(item, index) in tabBars" :key="index" @click="change(index)"
+				:ref="`tab${index}`"
+			>
+				<text style="height: 75px; line-height: 75px; border-bottom-width: 5px; border-style: solid;"
+					:style="{'color': tabIndex === index ? '#FD6801' : '#555', 
+						'border-color': tabIndex === index ? '#FD6801' : '#FFFFFF' }"
+					class="font-md">{{item.name}}</text>
+			</div>
+		</scroller>
+	</div>
+</template>
+
+<script>
+	const dom = weex.requireModule('dom');
+	export default {
+		props: {
+			tabBars: {
+				type: Array,
+				default: []
+			},
+			tabIndex: {
+				type: Number,
+				default: 0
+			},
+		},
+		watch: {
+			// 监听tabIndex的变化
+			tabIndex(newVal, oldVal) {
+				this.change(newVal);
+			}
+		},
+		methods: {
+			// 点击选项卡
+			async change(index) {
+				// 改变当前选中
+				// this.tabIndex = index;
+				this.$emit('tabchange', index);
+				// 监听滚动区域变化
+				// 拿到当前元素
+				let el = this.$refs[`tab${index}`][0];
+				// 获取当前元素信息（节点信息）
+				dom.getComponentRect(el, (res) => {
+					// console.log(res);
+					// 处于右边
+					if (res.size.right > 750) {
+						// 拿到处于中间的节点
+						let newEl = this.$refs[`tab${index - 4}`][0];
+						// 将节点滚动到最左边
+						return dom.scrollToElement(newEl, {});
+					}
+					// 处于左边
+					if (res.size.left < 0) {
+						return dom.scrollToElement(el, {});
+					}
+				})
+			},
+		}
+	}
+</script>
+
+<style src="@/common/zcm-main-nvue.css"></style>
+<style>
+</style>

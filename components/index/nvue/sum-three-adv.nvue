@@ -1,0 +1,32 @@
+<template>
+	<div>
+		<!-- 三图广告
+			左边：w375
+				左边图片：w373 h530
+			右边：w375
+				右边上图：w375 h263.5
+				右边下图：w375 h263.5
+		-->
+		<div class="w-100 row">
+			<div class="col-6">
+				<image :src="threeAdv[0].src" style="width: 373px; height: 530px;"></image>
+			</div>
+			<div class="col-6 j-sb">
+				<image :src="threeAdv[1].src" style="width: 375px; height: 263.5px;"></image>
+				<image :src="threeAdv[2].src" style="width: 375px; height: 263.5px;"></image>
+			</div>
+		</div>
+	</div>
+</template>
+
+<script>
+	export default { 
+		props: {
+			threeAdv: Array
+		}
+	}
+</script>
+
+<style src="@/common/zcm-main-nvue.css"></style>
+<style>
+</style>

@@ -1,0 +1,49 @@
+<template>
+	<div>
+		<!-- 公共列表组件
+			间隙：5px
+			每列占：375px
+		-->
+		<div class="w-50 common-list mb-1" @click="openDetail">
+			<image :src="item.cover" class="common-list-cover"></image>
+			<!-- lines: 文件行数 -->
+			<text class="font-md text-dark px-2 py-1" style="lines: 1">{{item.title}}</text>
+			<text class="font px-2 text-light-muted" style="lines: 1">{{item.desc}}</text>
+			<!-- 价格 -->
+			<div class="px-2 pt-1 row a-end">
+				<price>{{item.pprice}}</price>
+				<text class="line-through text-light-muted ml-1 font">￥{{item.oprice}}</text>
+			</div>
+		</div>
+	</div>
+</template>
+
+<script>
+	import price from "@/components/common/price.nvue";
+	export default {
+		components: {
+			price
+		},
+		props: {
+			item: Object
+		},
+		methods: {
+			openDetail() {
+				uni.navigateTo({
+					url: '/pages/detail/detail'
+				});
+			}
+		}
+	}
+</script>
+
+<style src="@/common/zcm-main-nvue.css"></style>
+<style>
+	.common-list {
+		padding-left: 2.5px;
+		padding-right: 2.5px;
+	}
+	.common-list-cover {
+		width: 370px; height: 370px;
+	}
+</style>

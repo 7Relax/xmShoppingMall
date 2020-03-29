@@ -1,0 +1,35 @@
+<template>
+	<div>
+		<!-- 图标分类组件
+			共占：750px
+			每一个图标分类占：142px * 5 = 710px
+			整体内边距：20px（左边和右边）
+			每个图标：58px * 58px
+		-->
+		<div class="row w-100 px-2 mb-3">
+			<div class="j-center a-center mt-3 index-nav"
+				v-for="(item, index) in indexNavs" :key="index">
+				<image :src="item.src" class="index-nav-image"></image>
+				<text class="font text-muted mt-1">{{item.text}}</text>
+			</div>
+		</div>
+	</div>
+</template>
+
+<script>
+	export default {
+		props: {
+			indexNavs: Array
+		}
+	}
+</script>
+
+<style src="@/common/zcm-main-nvue.css"></style>
+<style>
+	.index-nav {
+		width: 142px;
+	}
+	.index-nav-image {
+		width: 58px; height: 58px;
+	}
+</style>
