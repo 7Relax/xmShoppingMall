@@ -4,7 +4,7 @@
 		<swiper-image :swiperData="banners" height="750" preview /> 
 		
 		<!-- 基础详情 -->
-		<base-info :detail="detail" />
+		<base-info :detail="detail" :showPrice="showPrice"/>
 		
 		<!-- 滚动商品特性 w170 * h110 -->
 		<scroll-attrs :baseAttrs="baseAttrs" />
@@ -205,43 +205,13 @@
 		},
 		data() {
 			return {
-				selects: [
-					{
-						selected: 0,
-						title: '颜色',
-						list: [
-							{ name: '黄色' },
-							{ name: '黑色' },
-							{ name: '蓝色' }
-						]
-					},
-					{
-						selected: 0,
-						title: '容量',
-						list: [
-							{ name: '64GB' },
-							{ name: '256GB' }
-						]
-					},
-					{
-						selected: 0,
-						title: '套餐',
-						list: [
-							{ name: '标配' },
-							{ name: '套餐一' },
-							{ name: '套餐二' }
-						]
-					},
-				],
+				selects: [],
 				popup: {
 					attr: 'none',
 					express: 'none',
 					service: 'none'
 				},
-				banners: [
-					{ src: '/static/images/demo/demo11.jpg'},
-					{ src: '/static/images/demo/demo12.jpg'}
-				],
+				banners: [],
 				detail: {
 					id: '2008',
 					title: '小米MIX3 6GB+12GB',
@@ -251,64 +221,96 @@
 					num: 1,
 					max: 100
 				},
-				baseAttrs: [
-					{icon: 'icon-cpu', name: 'CPU1', desc: '绞龙845八核'},
-					{icon: 'icon-cpu', name: 'CPU2', desc: '绞龙845八核'},
-					{icon: 'icon-cpu', name: 'CPU3', desc: '绞龙845八核'},
-					{icon: 'icon-cpu', name: 'CPU4', desc: '绞龙845八核'},
-					{icon: 'icon-cpu', name: 'CPU5', desc: '绞龙845八核'},
-					{icon: 'icon-cpu', name: 'CPU6', desc: '绞龙845八核'},
-					{icon: 'icon-cpu', name: 'CPU7', desc: '绞龙845八核'}
-				],
-				context: htmlString,
-				comments: [
-					{
-						userPic: "/static/images/demo/demo6.jpg",
-						username: "楚棉1",
-						createTime: "2020-11-21",
-						praiseNum: "123",
-						context: "评论内容 ......",
-						picList: [
-							"/static/images/demo/demo6.jpg", "/static/images/demo/demo6.jpg", "/static/images/demo/demo6.jpg"
-						]
-					},
-					{
-						userPic: "/static/images/demo/demo6.jpg",
-						username: "楚棉2",
-						createTime: "2020-11-21",
-						praiseNum: "123",
-						context: "评论内容 ......",
-						picList: [
-							"/static/images/demo/demo6.jpg", "/static/images/demo/demo6.jpg", "/static/images/demo/demo6.jpg"
-						]
-					}
-				],
-				hotList: [
-					{
-						cover: "/static/images/demo/list/4.jpg",
-						title: "米家空调",
-						desc: "1.5匹变频",
-						pprice: 1399,
-						oprice: 3699
-					},{
-						cover: "/static/images/demo/list/4.jpg",
-						title: "米家空调2",
-						desc: "1.5匹变频2",
-						pprice: 1399,
-						oprice: 3699
-					}
-				]
+				baseAttrs: [],
+				context: '',
+				comments: [],
+				hotList: []
+			}
+		},
+		onLoad(e) {
+			if (e.detail) {
+				this.__init( JSON.parse(e.detail) );
 			}
 		},
 		computed: {
 			...mapState({
 				addressList: state => state.address.list
-			})
+			}),
+			showPrice() {
+				return this.detail.min_price || 0.00
+			}
 		},
 		methods: {
 			...mapMutations([
 				'addCartFromDetail'
 			]),
+			// 初始化页面
+			__init(data) {
+				console.log(data.id);
+				this.$H.get('/goods/'+data.id).then(res => {
+					console.log(res);
+					// 轮播图
+					this.banners = res.goodsBanner.map(v => {
+						return {
+							src: v.url
+						} 
+					})
+					// 初始化基本信息
+					this.detail = res;
+					// 修改页面标题
+					uni.setNavigationBarTitle({
+						title: res.title
+					})
+					// 滚动商品属性
+					this.baseAttrs = res.goodsAttrs.map(v => {
+						return	{
+							icon: 'icon-cpu',
+							name: v.name,
+							desc: v.value
+						}
+					});
+					// 热门评论
+					this.comments = res.hotComments.map(v => {
+						return {
+							id: v.id, 
+							userId: v.user_id,
+							userPic: v.user.avatar,
+							username: v.user.nickname,
+							createTime: v.review_time,
+							praiseNum: v.rating,
+							context: v.review.data,
+							picList: v.review.image
+						}
+					})
+					// 商品详情
+					this.context = res.content;
+					// 热门推荐
+					this.hotList = res.hotList.map(v => {
+						return {
+							cover: v.cover,
+							title: v.title,
+							desc: v.desc,
+							pprice: v.min_price,
+							oprice: v.min_oprice
+						}
+					})
+					// 商品规格
+					this.selects = res.goodsSkusCard.map(v => {
+						let list = v.goodsSkusCardValue.map(obj => {
+							return {
+								id: obj.id,
+								name: obj.value
+							}
+						})
+						return {
+							id: v.id,
+							selected: 0,
+							title: v.name,
+							list: list
+						}
+					})
+				});
+			},
 			// 加入购物车
 			addCart() {
 				// 组装数据（模拟）

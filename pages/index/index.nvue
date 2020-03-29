@@ -86,7 +86,7 @@
 				<!-- 上拉加载 -->
 				<loading class="w-100 flex-row j-center a-center" style="height: 80px;"
 					@loading="onLoading" :display="list.loadingShow">
-					<text class="font-md text-muted">Loading ...</text>
+					<text class="font-md text-muted">{{list.loadingText}}</text>
 				</loading>
 			</list>
 			
@@ -95,7 +95,7 @@
 </template>
 
 <script>
-	import $H from "@/common/lib/request.js"
+	import $H from "@/common/lib/request.js";
 	import sumTabbar from "@/components/index/nvue/sum-tabbar.nvue";
 	import sumSlider from "@/components/index/nvue/sum-slider.nvue";
 	import sumIndexNavs from "@/components/index/nvue/sum-index-navs.nvue";
@@ -167,6 +167,7 @@
 						refreshShow: 'hide',
 						refreshText: '下拉可刷新',
 						loadingShow: 'hide',
+						loadingText: '上拉加载更多',
 						data: [], // 当前页面所有数据
 						firstLoad: firstLoad
 					};
@@ -187,50 +188,11 @@
 				this.tabIndex = e.index;
 				// before代表之前未请求过
 				if ( this.newsItems[this.tabIndex].firstLoad === 'before' ) {
-					this.addData();
+					this.loadData();
 				}
-			},
-			// 判断下拉刷新状态
-			pullingDown(e) {
-				if (e.pullingDistance > e.viewHeight) {
-					this.refreshText = '释放就能刷新咯';
-				} else {
-					this.refreshText = '下拉可以刷新';
-				}
-			},
-			// 执行刷新
-			refresh(e) {
-				// 存储当前索引
-				let index = this.tabIndex;
-				this.newsItems[index].refreshShow = 'show';
-				this.newsItems[index].refreshText = '正在刷新... ';
-				this.addData(() => {
-					uni.showToast({ title: '刷新成功', icon: 'none' });
-					this.newsItems[index].refreshShow = 'hide';
-					this.newsItems[index].refreshText = '下拉可以刷新';
-				}, true)
-			},
-			// 上拉加载事件
-			onLoading() {
-				// 存储当前索引
-				let index = this.tabIndex;
-				this.newsItems[index].loadingShow = 'show';
-				// 没有更多数据
-				if (this.newsItems[index].loadingText === '没有更多了') {
-					uni.showToast({ title: '没有更多了', icon: 'none' });
-					this.$nextTick(() => {
-						this.newsItems[index].loadingShow = 'hide';
-					})
-					return;
-				}
-				// 加载数据的时候传一个回调函数进去
-				this.addData(() => {
-					uni.showToast({ title: '加载成功', icon: 'none' });
-					this.newsItems[index].loadingShow = 'hide';
-				});
 			},
 			// 加载数据/刷新数据
-			async addData(callback = false, refresh = false) { 
+			async loadData(callback = false, refresh = false) { 
 				// 拿到当前索引（申明变量e接收是为了防止用户滑动太快）
 				let e = this.tabIndex;
 				// 拿到当前分类id
@@ -247,19 +209,67 @@
 				if (page === 1 && this.newsItems[e].refreshShow === 'hide') {
 					this.newsItems[e].firstLoad = 'after';
 				}
+				console.log("a ...");
 				// 成功
 				if (data) {
-					let data = result.data.data;
+					console.log("b ...");
 					// 赋值渲染
 					this.newsItems[e].data = !refresh ? [...this.newsItems[e].data, ...data] : [...data];
-					// 执行回调
-					if (typeof callback == 'function') {
-						// 执行回调函数
-						callback();
-					}
+					console.log("c ...");
 					// 没有更多了
-					if (data.length < 5) { this.newsItems[e].loadingText = '没有更多了'; return; }
+					if (data.length < 5) { this.newsItems[e].loadingText = '没有更多了'; }
 				}
+				// 执行回调
+				if (typeof callback == 'function') {
+					console.log("d ...");
+					// 执行回调函数
+					callback();
+				}
+			},
+			// 判断下拉刷新状态
+			pullingDown(e) {
+				if (e.pullingDistance > e.viewHeight) {
+					this.refreshText = '释放就能刷新咯';
+				} else {
+					this.refreshText = '下拉可以刷新';
+				}
+			},
+			// 执行刷新
+			refresh(e) {
+				// 存储当前索引
+				let index = this.tabIndex;
+				this.newsItems[index].refreshShow = 'show';
+				this.newsItems[index].refreshText = '正在刷新... ';
+				console.log("1 ...");
+				this.loadData(() => {
+					console.log("2 ...");
+					uni.showToast({ title: '刷新成功', icon: 'none' });
+					this.$nextTick(() => {
+						console.log("3 ...");
+						this.newsItems[index].refreshShow = 'hide';
+						this.newsItems[index].refreshText = '下拉可以刷新';
+					})
+					console.log("4 ...");
+				}, true)
+			},
+			// 上拉加载事件
+			onLoading() {
+				// 存储当前索引
+				let index = this.tabIndex;
+				this.newsItems[index].loadingShow = 'show';
+				// 没有更多数据
+				if (this.newsItems[index].loadingText === '没有更多了') {
+					uni.showToast({ title: '没有更多了', icon: 'none' });
+					this.$nextTick(() => {
+						this.newsItems[index].loadingShow = 'hide';
+					})
+					return;
+				}
+				// 加载数据的时候传一个回调函数进去
+				this.loadData(() => {
+					uni.showToast({ title: '加载成功', icon: 'none' });
+					this.newsItems[index].loadingShow = 'hide';
+				});
 			}
 		}
 	}
@@ -267,18 +277,4 @@
 
 <style src="@/common/zcm-main-nvue.css"></style>
 <style>
-	.slider, .image {
-		width: 750px;
-		height: 300px;
-	}
-	.indicator {
-		position: absolute;
-		right: 0;
-		bottom: 0;
-		width: 150px;
-		height: 50px;
-		background-color: rgba(0, 0, 0, 0);
-		item-color: rgba(255, 255, 255, 0.5);
-		item-selected-color: #FFFFFF;
-	}
 </style>

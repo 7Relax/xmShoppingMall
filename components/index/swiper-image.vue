@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<swiper indicator-dots autoplay :interval="3000" :duration="1000" :style="getStyle" circular>
+		<swiper indicator-dots autoplay :interval="3000" :duration="200" :style="getStyle" circular>
 			<block v-for="(item, index) in swiperData" :key="index">
 				<swiper-item>
 					<view class="swiper-item" @tap="event(item, index)">
@@ -15,8 +15,7 @@
 <script>
 	export default {
 		props: {
-			// swiperData: Array,
-			swiperData: Object,
+			swiperData: [Array, Object],
 			height: {
 				type: String,
 				default: "350"
@@ -32,8 +31,6 @@
 				return `height: ${this.height}rpx`; // rpx兼容性好
 			},
 			getUrls() {
-				// return this.swiperData.map(obj => obj.src);
-				
 				console.log(this.swiperData);
 				var arr = [];
 				for (var i in this.swiperData) {

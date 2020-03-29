@@ -12,7 +12,7 @@
 					</image>
 					<view class="ml-2">
 						<text class="font-md line-h">{{item.username}}</text>
-						<text class="d-block font text-light-muted line-h">{{item.createTime}}</text>
+						<text class="d-block font text-light-muted line-h">{{item.createTime | formatTime}}</text>
 					</view>
 					<view class="iconfont icon-dianzan font text-light-muted pl-1 ml-auto">{{item.praiseNum}}</view>
 				</view>
@@ -40,10 +40,16 @@
 </template>
 
 <script>
+	import $T from '@/common/lib/time.js'
 	export default {
 		props: {
 			comments: {
 				type: Array
+			}
+		},
+		filters: {
+			formatTime(value) {
+				return $T.gettime(value);
 			}
 		}
 	}

@@ -14,6 +14,10 @@ Vue.component('divider', divider)
 // import loading from '@/components/common/loading.vue'
 // Vue.component('loading', loading)
 
+// 引入request库
+import $H from "@/common/lib/request.js"
+Vue.prototype.$H = $H
+
 // 引入全局加载loading
 import loadingPlus from '@/common/mixin/loading-plus.vue'
 Vue.component('loading-plus', loadingPlus)
