@@ -15,24 +15,28 @@
 			
 			<view class="d-flex a-center position-absolute left-0 right-0" style="bottom: 50rpx;">
 				<!-- 头像 -->
-				<image src="/static/images/demo/demo6.jpg" style="width: 145rpx; height: 145rpx; border: 5rpx solid;" 
-					class="rounded-circle border-light ml-4"></image>
+				<image :src="loginStatus ? userInfo.avatar : '/static/images/demo/demo6.jpg'"
+					style="width: 145rpx; height: 145rpx; border: 5rpx solid;" 
+					class="rounded-circle border-light ml-4">
+				</image>
 				<!-- 昵称 -->
-				<view class="ml-2 text-white font-md" @click="loginTest">测试昵称</view>
+				<view class="ml-2 text-white font-md" @click="openLogin">
+					{{loginStatus ? userInfo.nickname : '登录/注册'}}
+				</view>
 				<!-- 积分 -->
 				<view class="d-flex j-center a-center a-self-end ml-auto px-2" 
 					style="height: 70rpx; background: #FFD43F; color: #CC4A00; border-top-left-radius: 40rpx; border-bottom-left-radius: 40rpx;"
 				>
 					<view class="line-h iconfont icon-huangguan text-white mr-1"></view>
-					<text>会员积分 1.99</text>
+					<text>会员积分 0.00</text>
 				</view>
 			</view>
 		</view>
 		<!-- 图标分类 -->
-		<card>
+		<card> 
 			<view slot="title" class="d-flex j-sb a-center">
 				<text class="font-md font-weight">我的订单</text>
-				<view class="text-secondary" @click="navigate('order')">
+				<view class="text-secondary" @click="navigate('order', true)">
 					全部订单<text class="iconfont icon-you font"></text>
 				</view>
 			</view>
@@ -49,10 +53,10 @@
 		
 		<view class="iconfont "></view>
 		<!--  -->
-		<uni-list-item title="小米会员" showExtraIcon leftIcon="icon-VIP" leftIconStyle="color: #BDBF2E;"></uni-list-item>
+		<!-- <uni-list-item title="小米会员" showExtraIcon leftIcon="icon-VIP" leftIconStyle="color: #BDBF2E;"></uni-list-item> -->
 		<uni-list-item title="会员中心" showExtraIcon leftIcon="icon-huangguan" leftIconStyle="color: #FCBE2D;"></uni-list-item>
 		<uni-list-item title="服务中心" showExtraIcon leftIcon="icon-service" leftIconStyle="color: #FA6C5E;"></uni-list-item>
-		<uni-list-item title="小米之家" showExtraIcon leftIcon="icon-home" leftIconStyle="color: #FE8B42;"></uni-list-item>
+		<!-- <uni-list-item title="小米之家" showExtraIcon leftIcon="icon-home" leftIconStyle="color: #FE8B42;"></uni-list-item> -->
 		<uni-list-item title="更多功能" showExtraIcon leftIcon="icon-gengduo" leftIconStyle="color: #9ED45A;"></uni-list-item>
 		<divider />
 		<!-- <uni-list-item title="更多设置" showExtraIcon leftIcon="icon-icon_set_up" leftIconStyle="color: #808C98;" @click="navigate('user-set')"></uni-list-item> -->
@@ -66,7 +70,8 @@
 <script>
 	import loading from "@/common/mixin/loading.js";
 	import Card from "@/components/common/card.vue"
-	import UniListItem from "@/components/uni-ui/uni-list-item/uni-list-item.vue"
+	import UniListItem from "@/components/uni-ui/uni-list-item/uni-list-item.vue";
+	import { mapState } from "vuex";
 	export default {
 		mixins: [loading],
 		components: {
@@ -77,17 +82,31 @@
 			return {
 			}
 		},
+		computed: {
+			...mapState({
+				loginStatus: state => state.user.loginStatus,
+				userInfo: state => state.user.userInfo
+			})
+		},
 		methods: {
-			navigate(path) {
+			// check表示：默认不需要验证
+			navigate(path, check=false) {
 				if (!path) { return; }
+				if (check) {
+					return this.navigateTo({
+						url: `/pages/${path}/${path}`
+					});
+				}
 				uni.navigateTo({
 					url: `/pages/${path}/${path}`
 				});
 			},
-			loginTest() {
-				uni.navigateTo({
-					url: '/pages/login/login'
-				});
+			openLogin() {
+				if (!this.loginStatus) {
+					uni.navigateTo({
+						url: '/pages/login/login'
+					});
+				}
 			}
 		}
 	}

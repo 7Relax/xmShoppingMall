@@ -58,6 +58,14 @@
 				if (+newVal !== +oldVal) {
 					this.$emit("change", newVal);
 				}
+			},
+			// 最大库存变化
+			max(newVal, oldVal) {
+				console.log("max ....", newVal);
+				// 如果input框内的数值大于最大库存
+				if (this.inputValue > newVal) {
+					this.inputValue = newVal;
+				}
 			}
 		},
 		created() {

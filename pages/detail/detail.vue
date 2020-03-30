@@ -12,10 +12,11 @@
 		<!-- 属性选择 -->
 		<view class="p-2">
 			<view class="rounded border bg-light-secondary">
-				<uni-list-item @click="show('attr')">
+				<!-- detail.sku_type 为 0 代表单规格，1 代表多规格 -->
+				<uni-list-item @click="show('attr')" v-if="detail.sku_type === 1">
 					<view class="d-flex">
 						<text class="mr-2 text-muted">已选</text>
-						<text>火焰红 64G 标配</text>
+						<text>{{checkedSkus}}</text>
 					</view>
 				</uni-list-item>
 				<uni-list-item @click="show('express')">
@@ -48,7 +49,7 @@
 		<scroll-comments :comments="comments" />
 		
 		<!-- 商品详情 -->
-		<view class="py-4">
+		<view class="py-1">
 			<uParse className="uParse" :content="context" @preview="preview" @navigate="navigate"/>
 		</view>
 		
@@ -69,9 +70,9 @@
 				<image src="/static/images/demo/list/1.jpg" mode="widthFix" 
 					style="width: 180rpx; height: 180rpx;" class="border rounded"></image>
 				<view class="pl-2">
-					<price priceSize="font-lg" unitSize="font">3369</price>
+					<price priceSize="font-lg" unitSize="font">{{showPrice}}</price>
 					<text class="d-block">
-						火焰红 64GB 标配
+						{{checkedSkus}}
 					</text>
 				</view>
 			</view>
@@ -86,7 +87,7 @@
 				<!-- 购买数量 -->
 				<view class="d-flex j-sb a-center p-2 border-top border-light-secondary">
 					<text>购买数量</text>
-					<uni-number-box :min="1" :value="detail.num" @change="detail.num = $event"></uni-number-box>
+					<uni-number-box :min="1" :max="maxStock" :value="detail.num" @change="detail.num = $event"></uni-number-box>
 				</view>
 			</scroll-view>
 			
@@ -152,46 +153,35 @@
 </template>
 
 <script>
-	import SwiperImage from "@/components/index/swiper-image.vue";
-	import BaseInfo from "@/components/detail/base-info.vue";
-	import ScrollAttrs from "@/components/detail/scroll-attrs.vue";
-	import UniListItem from "@/components/uni-ui/uni-list-item/uni-list-item.vue";
-	import ScrollComments from "@/components/detail/scroll-comments.vue";
+	import swiperImage from "@/components/index/swiper-image.vue";
+	import baseInfo from "@/components/detail/base-info.vue";
+	import scrollAttrs from "@/components/detail/scroll-attrs.vue";
+	import uniListItem from "@/components/uni-ui/uni-list-item/uni-list-item.vue";
+	import scrollComments from "@/components/detail/scroll-comments.vue";
 	import uParse from "@/components/uni-ui/uParse/src/wxParse.vue";
-	import Card from "@/components/common/card.vue";
-	import CommonList from "@/components/common/common-list.vue";
-	import BottomBtn from "@/components/detail/bottom-btn.vue";
-	import CommonPopup from "@/components/common/common-popup.vue";
-	import Price from "@/components/common/price.vue";
-	import ZcmRadioGroup from "@/components/common/radio-group.vue";
-	import UniNumberBox from "@/components/uni-ui/uni-number-box/uni-number-box.vue";
+	import card from "@/components/common/card.vue";
+	import commonList from "@/components/common/common-list.vue";
+	import bottomBtn from "@/components/detail/bottom-btn.vue";
+	import commonPopup from "@/components/common/common-popup.vue";
+	import price from "@/components/common/price.vue";
+	import zcmRadioGroup from "@/components/common/radio-group.vue";
+	import uniNumberBox from "@/components/uni-ui/uni-number-box/uni-number-box.vue";
 	import { mapState, mapMutations } from 'vuex';
-	var htmlString = `
-		<p>
-			<img src="https://i8.mifile.cn/v1/a1/9c3e29dc-151f-75cb-b0a5-c423a5d13926.webp">
-			<img src="https://i8.mifile.cn/v1/a1/f442b971-379f-5030-68aa-3b0accb8c2b9.webp">
-			<img src="https://i8.mifile.cn/v1/a1/63b700b6-643e-ec18-fdf3-da66b4b4173f.webp">
-			<img src="https://i8.mifile.cn/v1/a1/e9dbf276-193e-11c4-99a6-3097fde82350.webp">
-			<img src="https://i8.mifile.cn/v1/a1/1249d3ee-2990-a2b4-28d9-f719c2417b1f.webp">
-			<img src="https://i8.mifile.cn/v1/a1/97c79915-64b2-808c-53b4-4345652a179f.webp">
-			<img src="https://i8.mifile.cn/v1/a1/cd0fbe1e-a1b3-a87a-f4a6-6fb08ec54931.webp">
-		</p>
-		    `
 	export default {
 		components: {
-			SwiperImage,
-			BaseInfo,
-			ScrollAttrs,
-			UniListItem,
-			ScrollComments,
+			swiperImage,
+			baseInfo,
+			scrollAttrs,
+			uniListItem,
+			scrollComments,
 			uParse,
-			Card,
-			CommonList,
-			BottomBtn,
-			CommonPopup,
-			Price,
-			ZcmRadioGroup,
-			UniNumberBox
+			card,
+			commonList,
+			bottomBtn,
+			commonPopup,
+			price,
+			zcmRadioGroup,
+			uniNumberBox
 		},
 		// 监听页面返回事件
 		onBackPress() {
@@ -212,15 +202,7 @@
 					service: 'none'
 				},
 				banners: [],
-				detail: {
-					id: '2008',
-					title: '小米MIX3 6GB+12GB',
-					cover: "/static/images/demo/list/4.jpg",
-					desc: '磁动力滑盖全面屏 / 前后旗舰AI双摄 / 四曲面彩色陶瓷机身 / 高效10W无线充电',
-					pPrice: 3299,
-					num: 1,
-					max: 100
-				},
+				detail: {},
 				baseAttrs: [],
 				context: '',
 				comments: [],
@@ -236,8 +218,41 @@
 			...mapState({
 				addressList: state => state.address.list
 			}),
+			// 选中的skus，如：'黄色,套餐一'
+			checkedSkus() {
+				let arr = this.selects.map(v => {
+					return v.list[v.selected].name
+				})
+				return arr.join(',')
+			},
+			// 选中的skus的索引
+			checkedSkusIndex() {
+				if (!Array.isArray(this.detail.goodsSkus)) {
+					// this.detail.goodsSkus 还不是数组的时候（刚进入详情页）
+					return -1
+				}
+				let index = this.detail.goodsSkus.findIndex(item => {
+					return item.skusText === this.checkedSkus
+				})
+				return index
+			},
+			// 显示价格
 			showPrice() {
-				return this.detail.min_price || 0.00
+				if (this.checkedSkusIndex < 0) {
+					return this.detail.min_price || 0.00
+				}
+				return this.detail.goodsSkus[this.checkedSkusIndex].pprice
+			},
+			// 最大库存
+			maxStock() {
+				if (this.detail.sku_type === 0) {
+					// sku_type = 0 代表单规格
+					return this.detail.stock
+				}
+				if (!Array.isArray(this.detail.goodsSkus)) {
+					return 0
+				}
+				return this.detail.goodsSkus[this.checkedSkusIndex].stock
 			}
 		},
 		methods: {
@@ -246,7 +261,6 @@
 			]),
 			// 初始化页面
 			__init(data) {
-				console.log(data.id);
 				this.$H.get('/goods/'+data.id).then(res => {
 					console.log(res);
 					// 轮播图
@@ -294,21 +308,40 @@
 							oprice: v.min_oprice
 						}
 					})
-					// 商品规格
-					this.selects = res.goodsSkusCard.map(v => {
-						let list = v.goodsSkusCardValue.map(obj => {
+					
+					// 多规格
+					if (this.detail.sku_type === 1) {
+						// 商品规格（选项部分）
+						this.selects = res.goodsSkusCard.map(v => {
+							let list = v.goodsSkusCardValue.map(obj => {
+								return {
+									id: obj.id,
+									name: obj.value
+								}
+							})
 							return {
-								id: obj.id,
-								name: obj.value
+								id: v.id,
+								selected: 0,
+								title: v.name,
+								list: list
 							}
 						})
-						return {
-							id: v.id,
-							selected: 0,
-							title: v.name,
-							list: list
-						}
-					})
+						// 商品规格（匹配价格）
+						let stoc = 3;
+						this.detail.goodsSkus.forEach(item => {
+							let arr = [];
+							for (let key in item.skus) {
+								arr.push(item.skus[key].value)
+							}
+							// 转成以逗号分割的字符串
+							item.skusText = arr.join(',');
+							// 模拟数据（由于后台返回的stock都为0）
+							item.stock += stoc;
+							stoc += 2;
+						})
+						console.log(JSON.stringify(this.detail.goodsSkus));
+					}
+					
 				});
 			},
 			// 加入购物车

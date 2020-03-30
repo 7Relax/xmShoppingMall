@@ -7,27 +7,34 @@
 		</view>
 		
 		<view class="p-5">
+			
 			<view class="font-lg mb-5">密码登录</view>
+			
 			<input type="text" class="border-bottom mb-4 uni-input px-0" v-model="form.username"
 				@focus="focus('username')" @blur="blur('username')"
 				placeholder-class="text-light-muted" placeholder="请输入手机号/邮箱" 
 				:class="focusClass.username ? 'input-border-color' : '' "/>
+				
 			<input type="text" class="border-bottom uni-input px-0" v-model="form.password"
 				@focus="focus('password')" @blur="blur('password')" 
 				:class="focusClass.password ? 'input-border-color' : '' "
 				placeholder-class="text-light-muted" placeholder="请输入密码" style="margin-bottom: 60rpx;"/>
+				
 			<view class="py-2 w-100 d-flex j-center a-center rounded main-bg-color text-white font-md mb-4"
 				hover-class="main-bg-hover-color" @click="submit">登录</view>
+				
 			<label class="d-flex a-center" @click="isChecked = !isChecked">
 				<checkbox :checked="isChecked"/>
 				<text class="text-light-muted font">已阅读并同意xxx协议</text>
 			</label>
+			
 		</view>
 	</view>
 </template>
 
 <script>
 	import uniStatusBar from "@/components/uni-ui/uni-status-bar/uni-status-bar.vue";
+	import { mapMutations } from "vuex";
 	export default {
 		components: {
 			uniStatusBar
@@ -55,6 +62,7 @@
 			}
 		},
 		methods: {
+			...mapMutations(['login']),
 			goBack() {
 				uni.navigateBack({
 					delta: 1
@@ -81,26 +89,38 @@
 				return result;
 			},
 			submit() {
-				if ( !this.isChecked ) {
-					uni.showToast({ title: '请先同意xxx协议', icon: 'none' });
-					return;
-				}
+				// if ( !this.isChecked ) {
+				// 	uni.showToast({ title: '请同意xxx协议', icon: 'none' });
+				// 	return;
+				// }
 				// 验证用户名
-				if ( !this.validate('username') ) return;
+				// if ( !this.validate('username') ) return;
 				// 验证密码
-				if ( !this.validate('password') ) return;
-				// 提交成功
+				// if ( !this.validate('password') ) return;
+				// 登录中
 				uni.showLoading({
 					title: '登录中...',
 					mask: true // 加上遮罩以防止点击多次
 				});
-				// 模拟登录成功
-				setTimeout( () => {
+				// 提交
+				this.$H.post('/login', {
+					username: this.form.username,
+					password: this.form.password
+				}).then(res => {
+					console.log(res);
+					// 状态存储
+					this.login(res);
+					// 登录成功
+					uni.showToast({
+						title: '登录成功'
+					});
 					uni.hideLoading();
-					uni.navigateBack({
-						delta: 1
-					})
-				}, 2000)
+					setTimeout(() => {
+						uni.navigateBack({
+							delta: 1
+						})
+					},500)
+				})
 			}
 		}
 	}

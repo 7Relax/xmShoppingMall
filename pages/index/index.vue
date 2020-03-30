@@ -226,7 +226,6 @@
 				}
 				// 执行回调
 				if (typeof callback == 'function') {
-					console.log("ddd ...");
 					// 执行回调函数
 					callback();
 				}

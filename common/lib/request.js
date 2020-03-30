@@ -1,3 +1,4 @@
+import $store from "@/store/index.js";
 export default {
 	// 全局配置
 	common: {
@@ -18,6 +19,24 @@ export default {
 		options.data = options.data || this.common.data;
 		options.method = options.method || this.common.method;
 		options.dataType = options.dataType || this.common.dataType;
+		
+		// token（判断是否要自动填充token）
+		if (options.token) {
+			options.header.token = $store.state.user.token;
+			// 若token不存在，则跳转到登录页
+			if (options.checkToken && !options.header.token ) {
+				uni.showToast({
+					title: '请先登录',
+					icon: 'none'
+				});
+				uni.navigateTo({
+					url: '/pages/login/login'
+				});
+				console.log("token不存在则跳转到登录页");
+				return;
+			}
+		}
+		
 		// 请求，用扩展运算符方式引入options参数 
 		return new Promise( (res, rej) => {
 			// 请求前... TODO
@@ -27,11 +46,14 @@ export default {
 				success: (result) => {
 					// 服务端失败
 					if (result.statusCode !== 200) {
-						uni.showToast({
-							title: result.data.msg || '服务端失败',
-							icon: 'none'
-						});
-						return rej();
+						// options.toast有可能的取值：undefined、true、false
+						if (options.toast !== false) {
+							uni.showToast({
+								title: result.data.msg || '服务端失败',
+								icon: 'none'
+							});
+						}
+						return rej(result.data);
 					}
 					// 成功
 					let data = result.data.data;

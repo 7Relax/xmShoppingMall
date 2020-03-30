@@ -5,7 +5,8 @@
 		<!-- 提高用户体验 -->
 		<loading-plus v-if="beforeReady" />
 		
-		<scroll-view id="leftScroll" scroll-y style="flex: 1; height: 100%;" class="border-right border-light-secondary" :scroll-top="leftScrollTop">
+		<scroll-view id="leftScroll" scroll-y style="flex: 1; height: 100%;"
+			class="border-right border-light-secondary" :scroll-top="leftScrollTop">
 			<view class="border-bottom border-light-secondary py-1 left-scroll-item" v-for="(item, index) in cate" :key="index">
 				<view class="font-md py-1 text-center text-muted"
 					:class="activeIndex === index ? 'class-active' : '' "
@@ -13,10 +14,12 @@
 			</view>
 		</scroll-view>
 		
-		<scroll-view scroll-y style="flex: 3.5; height: 100%;" :scroll-top="rightScrollTop" scroll-with-animation="true" @scroll="onRightScroll">
+		<scroll-view scroll-y style="flex: 3.5; height: 100%;" :scroll-top="rightScrollTop" 
+			scroll-with-animation="true" @scroll="onRightScroll">
 			<view class="row right-scroll-item" v-for="(item, index) in list" :key="index">
-				<view class="span24-8 text-center py-2" v-for="(item2, index2) in item.list" :key="index2">
-					<image :src="item2.src" style="width: 120upx; height: 120upx;"></image>
+				<view class="span24-8 text-center py-2" v-for="(item2, index2) in item.list" :key="index2"
+					@click="openDetail(item2)">
+					<image :src="item2.cover" style="width: 120upx; height: 120upx;"></image>
 					<text class="d-block">{{item2.name}}</text>
 				</view>
 			</view>
@@ -47,29 +50,6 @@
 		onLoad() {
 			this.getData();
 		},
-		// onReady 对应 mounted，dom节点已经渲染出来了
-		onReady() {
-			// 左侧
-			this.getEleInfo({
-				all: 'left',
-				size: true,
-				rect: true
-			}).then(data => {
-				this.leftDomsTop = data.map(obj => {
-					this.cateItemHeight = obj.height; // 拿到每一个节点的高度
-					return obj.top;
-				})
-			})
-			// 右侧
-			this.getEleInfo({
-				all: 'right',
-				size: false,
-				rect: true
-			}).then(data => {
-				this.rightDomsTop = data.map(obj => obj.top)
-				console.log(this.rightDomsTop);
-			})
-		},
 		watch: {
 			async activeIndex(newValue, oldValue) {
 				// 获取scroll-view的总高度 和 scroll-top信息
@@ -92,6 +72,51 @@
 			}
 		},
 		methods: {
+			getData() {
+				this.$H.get("/category/app_category").then(res => {
+					console.log(JSON.stringify(res));
+					var category = [];
+					var productList = [];
+					res.forEach(v => {
+						category.push({
+							name: v.name
+						})
+						productList.push({
+							list: v.app_category_items
+						})
+					})
+					this.cate = category;
+					this.list = productList;
+					// 数据获取完毕后关闭加载动画
+					this.$nextTick(() => {
+						this.getHeight();
+						this.showLoading = false;
+					})
+				})
+			},
+			// 获取节点高度
+			getHeight() {
+				// 左侧
+				this.getEleInfo({
+					all: 'left',
+					size: true,
+					rect: true
+				}).then(data => {
+					this.leftDomsTop = data.map(obj => {
+						this.cateItemHeight = obj.height; // 拿到每一个节点的高度
+						return obj.top;
+					})
+				})
+				// 右侧
+				this.getEleInfo({
+					all: 'right',
+					size: false,
+					rect: true
+				}).then(data => {
+					this.rightDomsTop = data.map(obj => obj.top)
+					console.log(this.rightDomsTop);
+				})
+			},
 			// 获取节点信息
 			getEleInfo(obj = {}) {
 				return new Promise((res, rej) => {
@@ -106,27 +131,6 @@
 						// 获取成功，将data传回
 						res(data);
 					}).exec();
-				})
-			},
-			getData() {
-				for (var i=0; i<20; i++) {
-					this.cate.push({
-						name: "分类"+i
-					})
-					this.list.push({
-						list: []
-					})
-				}
-				for (let i=0; i<this.list.length; i++) {
-					for (let j=0; j<4; j++) { // 模拟每个分类有4个商品
-						this.list[i].list.push(
-							{ src: "/static/images/demo/cate_03.png", name: `分类${i}-商品${j}` }
-						)
-					}
-				}
-				// 数据获取完毕后关闭加载动画
-				this.$nextTick(() => {
-					this.showLoading = false;
 				})
 			},
 			// 点击左侧分类
@@ -145,6 +149,13 @@
 						return false;
 					}
 				})
+			},
+			openDetail(item) {
+				uni.navigateTo({
+					url: '/pages/detail/detail?detail=' + JSON.stringify({
+						id: item.goods_id
+					})
+				});
 			}
 		}
 	}
