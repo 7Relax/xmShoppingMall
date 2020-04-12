@@ -32,11 +32,13 @@
 					<!-- 商品名 -->
 					<view class="text-dark" style="font-size: 35rpx;">{{item.title}}</view>
 					<!-- 规格属性 -->
-					<view class="d-flex text-light-muted mb-1" v-if="isEdit" @tap.stop="doShowPopup(index)" :class="isEdit ? 'p-1 bg-light-secondary mb-2 a-center' : '' ">
-						<text class="mr-1" v-for="(attr, attrIndex) in item.attrs" :key="attrIndex">{{attr.list[attr.selected].name}}</text>
-						<view class="iconfont icon-bottom font ml-auto" v-if="isEdit"></view>
-					</view>
-					<view class="d-flex text-light-muted mb-1" v-else>
+					<view class="d-flex text-light-muted mb-1" v-if="isEdit && item.skus_type === 1" @tap.stop="showPopup(index, item)"
+						:class="isEdit ? 'p-1 bg-light-secondary mb-2 a-center' : '' ">
+						<!-- 为了减轻后台压力，这里的skusText是后台直接处理好的规格，如：黄色、标配
+							 这样就不需要向后台请求大量的规格数据，只有当用户在购物车列表想要去编辑商品的时候才向后台请求规格数据（一般用户已经在商品详情页选好了，一般不会在购物车列表里改） -->
+						<!-- {{item.skusText}} -->
+						
+						<!-- 下面就是拿全部的规格数据 -->
 						<text class="mr-1" v-for="(attr, attrIndex) in item.attrs" :key="attrIndex">{{attr.list[attr.selected].name}}</text>
 						<view class="iconfont icon-bottom font ml-auto" v-if="isEdit"></view>
 					</view>
@@ -90,95 +92,68 @@
 		</view>
 		
 		<!-- 属性筛选框 -->
-		<common-popup :popupClass="popupShow" @hide="doHidePopup">
-			<!-- 商品信息（275rpx）图片180*180 -->
-			<view class="d-flex a-center" style="height: 275rpx;">
-				<image src="/static/images/demo/list/1.jpg" mode="widthFix" 
-					style="width: 180rpx; height: 180rpx;" class="border rounded"></image>
-				<view class="pl-2">
-					<price priceSize="font-lg" unitSize="font">3369</price>
-					<view class="d-block">
-						<!-- 火焰红 64GB 标配 -->
-						<text class="mr-1" v-for="(attr, attrIndex) in popupData.attrs" :key="attrIndex">{{attr.list[attr.selected].name}}</text>
-					</view>
-				</view>
-			</view>
-			
-			<!-- 表单部分（660rpx） -->
-			<scroll-view scroll-y class="w-100" style="height: 660rpx;">
-				<card :headTitle="item.title" :headTitleWeight="false" :headBorderBottom="false"
-					v-for="(item, index) in popupData.attrs" :key="index"
-				>
-					<zcm-radio-group :label="item" :selected.sync="item.selected"></zcm-radio-group>
-				</card>
-				<view class="d-flex j-sb a-center p-2 border-top border-light-secondary">
-					<text>购买数量</text>
-					<uni-number-box :min="1" :value="popupData.num" @change="popupData.num = $event"></uni-number-box>
-				</view>
-			</scroll-view>
-			
-			<!-- 按钮（100rpx） -->
-			<view class="d-flex main-bg-color font-md a-center j-center text-white mt-2" hover-class="main-bg-hover-color"
-				style="height: 100rpx; margin-left: -30rpx; margin-right: -30rpx;" @tap.stop="doHidePopup"
-			>
-				确定
-			</view>
-		</common-popup>
+		<sku-popup></sku-popup>
 		
 	</view>
 </template>
 
 <script>
 	import loading from "@/common/mixin/loading.js";
-	import UniNavBar from "@/components/uni-ui/uni-nav-bar/uni-nav-bar.vue";
-	import Price from "@/components/common/price.vue";
-	import UniNumberBox from "@/components/uni-ui/uni-number-box/uni-number-box.vue";
-	import CommonPopup from "@/components/common/common-popup.vue";
-	import Card from "@/components/common/card.vue";
-	import ZcmRadioGroup from "@/components/common/radio-group.vue";
-	import CommonList from "@/components/common/common-list.vue";
+	import uniNavBar from "@/components/uni-ui/uni-nav-bar/uni-nav-bar.vue";
+	import price from "@/components/common/price.vue";
+	import uniNumberBox from "@/components/uni-ui/uni-number-box/uni-number-box.vue";
+	import commonList from "@/components/common/common-list.vue";
+	import skuPopup from "@/components/cart/sku-popup.vue";
 	import { mapState, mapGetters, mapActions, mapMutations } from "vuex";
 	export default {
 		mixins: [loading],
 		components: {
-			UniNavBar,
-			Price,
-			UniNumberBox,
-			CommonPopup,
-			Card,
-			ZcmRadioGroup,
-			CommonList
+			uniNavBar,
+			price,
+			uniNumberBox,
+			commonList,
+			skuPopup
 		},
 		data() {
 			return {
 				isEdit: false,
 				hotList: [
-					{
-						cover: "/static/images/demo/list/4.jpg",
-						title: "米家空调",
-						desc: "1.5匹变频",
-						pprice: 1399,
-						oprice: 3699
-					},{
-						cover: "/static/images/demo/list/4.jpg",
-						title: "米家空调2",
-						desc: "1.5匹变频2",
-						pprice: 1399,
-						oprice: 3699
-					}
+					// {
+					// 	cover: "/static/images/demo/list/4.jpg",
+					// 	title: "米家空调",
+					// 	desc: "1.5匹变频",
+					// 	pprice: 1399,
+					// 	oprice: 3699
+					// },{
+					// 	cover: "/static/images/demo/list/4.jpg",
+					// 	title: "米家空调2",
+					// 	desc: "1.5匹变频2",
+					// 	pprice: 1399,
+					// 	oprice: 3699
+					// }
 				]
 			}
+		},
+		onLoad() {
+			this.getData();
+		},
+		beforeDestroy() {
+			// TODO 已不在cart.vue中监听了
+			uni.$off('updateCart');
+		},
+		onPullDownRefresh() {
+			// 一旦触发下拉刷新就会执行getData
+			this.getData();
 		},
 		computed: {
 			...mapState({
 				list: state => state.cart.list,
-				popupShow: state => state.cart.popupShow
+				selectedList: state => state.cart.selectedList
 			}),
 			...mapGetters([
 				'checkedAll', 
 				'totalPrice',
-				'disableSelectAll',
-				'popupData'
+				'disableSelectAll'
 			])
 		},
 		methods: {
@@ -186,18 +161,79 @@
 				'doSelectAll',
 				'doDelProduct',
 				'doShowPopup',
-				'doHidePopup'
+				'updateCartList'
 			]),
 			...mapMutations([
-				'selectItem'
+				'selectItem',
+				'initCartList'
 			]),
+			// 获取数据
+			getData() {
+				// 刷新购物车列表
+				this.updateCartList().then(res => {
+					console.log(res);
+					// 停止下拉刷新
+					uni.stopPullDownRefresh();
+				}).catch(err => {
+					uni.stopPullDownRefresh(); 
+				})
+				// 获取热门推荐
+				this.$H.get('/goods/hotlist').then(res => {
+					this.hotList = res.map(v => {
+						return {
+							id: v.id, 
+							cover: v.cover,
+							title: v.title,
+							desc: v.desc,
+							pprice: v.min_price,
+							oprice: v.min_oprice
+						}
+					})
+				})
+			},
 			changeNum(e, item, index) {
-				item.num = Number(e);
+				// 判断此时购物车商品的选中数量num 是否等于即将改变后的数量，相等则表示是刚进入页面，不是用户改变的
+				if (item.num === e) { console.log("item.num === e"); return; }
+				uni.showLoading({
+					title: '加载中...'
+				})
+				// 同步数据库
+				this.$H.post('/cart/updatenumber/'+item.id, {
+					num: e
+				}, {
+					token: true
+				}).then(res => {
+					console.log(res);
+					// 成功后再修改视图
+					item.num = Number(e);
+					// 隐藏loading
+					uni.hideLoading(); 
+				})
+			},
+			// 点击规格
+			showPopup(index, item) {
+				// 获取购物车商品SKU
+				this.$H.get('/cart/'+item.id+'/sku', {}, {
+					token: true
+				}).then(res => {
+					// 拿到数据后，则初始化sku-popup
+					console.log(res);
+					this.doShowPopup({
+						index,
+						data: res
+					});
+				})
 			},
 			// 订单结算
 			orderConfirm() {
+				if (this.selectedList.length < 0) {
+					return uni.showToast({
+						 'title': '请选择要结算的商品',
+						 'icon': 'none'
+					})
+				}
 				uni.navigateTo({
-					url: '/pages/order-confirm/order-confirm'
+					url: '/pages/order-confirm/order-confirm?detail=' + JSON.stringify(this.selectedList)
 				});
 			}
 		}

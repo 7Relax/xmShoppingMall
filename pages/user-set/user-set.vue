@@ -31,7 +31,7 @@
 						num: 0,
 						value: [
 							{ title: '个人资料', path: '' },
-							{ title: '收货地址', path: '' }
+							{ title: '收货地址', path: 'user-address-list' }
 						]
 					},
 					{
@@ -56,7 +56,7 @@
 			})
 		},
 		methods: {
-			...mapMutations(['logout']),
+			...mapMutations(['logout', 'clearCart']),
 			navigate(path) {
 				if (!path) { return; }
 				uni.navigateTo({
@@ -71,22 +71,23 @@
 				 * toast：是否需要提示
 				 */
 				this.$H.post('/logout', {}, {
-					token: false,
+					token: true,
 					checkToken: false,
 					toast: false
 				}).then(res => {
 					console.log("logout ... res = ", res);
+					// 清除state
 					this.logout();
+					// 清空购物车
+					this.clearCart();
+					// 返回上一页
+					uni.navigateBack({
+						delta: 1
+					})
 					uni.showToast({
 						title: '退出成功',
 						icon: 'none'
 					});
-					setTimeout(() => {
-						// 返回上一页
-						uni.navigateBack({
-							delta: 1
-						})
-					}, 500)
 				}).catch(err => {
 					console.log(err);
 				})

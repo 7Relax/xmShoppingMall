@@ -37,14 +37,14 @@
 </template>
 
 <script>
-	import CommonList from "@/components/common/common-list.vue"
-	import NoThing from "@/components/common/no-thing.vue"
-	import OrderList from "@/components/order/order-list.vue"
+	import commonList from "@/components/common/common-list.vue";
+	import noThing from "@/components/common/no-thing.vue";
+	import orderList from "@/components/order/order-list.vue";
 	export default {
 		components: {
-			CommonList,
-			NoThing,
-			OrderList
+			commonList,
+			noThing,
+			orderList
 		},
 		data() {
 			return {
@@ -86,9 +86,10 @@
 							}
 						]
 					},
-					{ name: '待付款', no_thing: 'no_pay', msg: '您还没有待付款订单', list: [] },
-					{ name: '待收货', no_thing: 'no_receiving', msg: '您还没有待收货订单', list: [] },
-					{ name: '待评价', no_thing: 'no_comment', msg: '您还没有待评价订单', list: [] }
+					{ name: "待付款", no_thing: "no_pay", msg: '您还没有待评价订单', list: [] },
+					{ name: "待发货", no_thing: "no_pay", msg: '您还没有待评价订单', list: [] },
+					{ name: "待收货", no_thing: "no_receiving", msg: '您还没有待评价订单', list: [] },
+					{ name: "退款", no_thing: "no_pay", msg: '您还没有待评价订单', list: [] }
 				],
 				hotList: [
 					{

@@ -7,7 +7,8 @@
 		
 		<scroll-view id="leftScroll" scroll-y style="flex: 1; height: 100%;"
 			class="border-right border-light-secondary" :scroll-top="leftScrollTop">
-			<view class="border-bottom border-light-secondary py-1 left-scroll-item" v-for="(item, index) in cate" :key="index">
+			<view class="border-bottom border-light-secondary py-1 left-scroll-item" 
+				v-for="(item, index) in cate" :key="index">
 				<view class="font-md py-1 text-center text-muted"
 					:class="activeIndex === index ? 'class-active' : '' "
 					@tap="changeCate(index)">{{item.name}}</view>
@@ -34,8 +35,6 @@
 		mixins: [loading],
 		data() {
 			return {
-				// 默认显示加载动画
-				showLoading: true,
 				// 当前选中的类别
 				activeIndex: 0,
 				cate: [],
@@ -87,10 +86,9 @@
 					})
 					this.cate = category;
 					this.list = productList;
-					// 数据获取完毕后关闭加载动画
+					// 数据获取完毕后获取节点高度
 					this.$nextTick(() => {
 						this.getHeight();
-						this.showLoading = false;
 					})
 				})
 			},

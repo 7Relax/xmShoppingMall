@@ -69,14 +69,14 @@
 
 <script>
 	import loading from "@/common/mixin/loading.js";
-	import Card from "@/components/common/card.vue"
-	import UniListItem from "@/components/uni-ui/uni-list-item/uni-list-item.vue";
+	import card from "@/components/common/card.vue";
+	import uniListItem from "@/components/uni-ui/uni-list-item/uni-list-item.vue";
 	import { mapState } from "vuex";
 	export default {
 		mixins: [loading],
 		components: {
-			Card,
-			UniListItem
+			card,
+			uniListItem
 		},
 		data() {
 			return {

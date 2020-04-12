@@ -66,6 +66,10 @@
 				if (this.inputValue > newVal) {
 					this.inputValue = newVal;
 				}
+				// 如果当前商品最大库存大于0 且 input框的值也是0（默认值）
+				if (this.inputValue === 0 && newVal > 0) {
+					this.inputValue = 1;
+				}
 			}
 		},
 		created() {

@@ -3,35 +3,34 @@
 		<uni-swipe-action>
 			<uni-swipe-action-item :options="options" :show="isOpened" 
 				:auto-close="false" @change="change" @click="bindClick($event, index)"
-				v-for="(item, index) in list" :key="index"
-			>
-				<view class="text-secondary p-3 border-bottom border-light-secondary" style="width: 100%;" hover-class="bg-light-secondary" @click="choiceAddress(item, index)">
+				v-for="(item, index) in list" :key="index">
+				
+				<view class="text-secondary p-3 border-bottom border-light-secondary" 
+					style="width: 100%;" hover-class="bg-light-secondary" @click="choiceAddress(item, index)">
 					<view class="d-flex a-center">
 						<text class="main-text-color">{{item.name}}</text>
 						<text class="ml-1">{{item.phone}}</text>
 						<text class="main-text-color ml-1">{{item.isDefault ? '[默认]' : ''}}</text>
 					</view>
 					<view class="d-flex a-center">
-						<text>{{item.address}}</text>
+						<text>{{item.province}} {{item.city}} {{item.district}}</text>
 						<view class="iconfont icon-you ml-auto"></view>
 					</view>
-					<view class="">{{item.detailAddr}}</view>
 				</view>
+				
 			</uni-swipe-action-item>
 		</uni-swipe-action>
 	</view>
 </template>
 
 <script>
-	import UniListItem from "@/components/uni-ui/uni-list-item/uni-list-item.vue"; // --- test
-	import UniSwipeAction from '@/components/uni-ui/uni-swipe-action/uni-swipe-action.vue';
-	import UniSwipeActionItem from '@/components/uni-ui/uni-swipe-action-item/uni-swipe-action-item.vue';
+	import uniSwipeAction from '@/components/uni-ui/uni-swipe-action/uni-swipe-action.vue';
+	import uniSwipeActionItem from '@/components/uni-ui/uni-swipe-action-item/uni-swipe-action-item.vue';
 	import { mapState, mapMutations } from 'vuex';
 	export default {
 		components: {
-			UniListItem,
-			UniSwipeAction,
-			UniSwipeActionItem
+			uniSwipeAction,
+			uniSwipeActionItem
 		},
 		data() {
 			return {
@@ -49,6 +48,8 @@
 				isOpened: false,
 				// type有两个值：update, choice
 				type: 'update',
+				// 分页
+				page: 1
 			}
 		},
 		// 监听导航栏按钮点击
@@ -73,6 +74,7 @@
 			if (e.type) {
 				this.type = e.type;
 			}
+			this.__init();
 		},
 		methods: {
 			change(e) {
@@ -80,8 +82,24 @@
 				// console.log('返回：', e);
 			},
 			...mapMutations([
-				'deleteAddr'
+				'deleteAddr',
+				'updateAddrList'
 			]),
+			// 初始化
+			__init() {
+				// http://ceshi3.dishait.cn/api/useraddresses/1
+				this.$H.get("/useraddresses/" + this.page, {}, {
+					token: true,
+					checkToken: true
+				}).then(res => {
+					console.log(res);
+					// 更新state
+					this.updateAddrList({
+						list: res,
+						refresh: true
+					});
+				})
+			},
 			bindClick(e, addrIndex) {
 				console.log(e);
 				if (e.index === 0) {

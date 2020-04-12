@@ -31,8 +31,12 @@ Vue.prototype.navigateTo = (options) => {
 		});
 	}
 	// 登录过则放行
-	uni.navigateTo(options);
+	uni.navigateTo(options)
 }
+
+// util工具
+import $U from './common/lib/util.js'
+Vue.prototype.$U = $U
 
 App.mpType = 'app'
 

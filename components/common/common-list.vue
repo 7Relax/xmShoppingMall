@@ -21,11 +21,15 @@
 			Price
 		},
 		props: {
-			item: Object
+			item: Object,
+			type: {
+				type: String,
+				default: 'navigateTo'
+			}
 		},
 		methods: {
 			detail() {
-				uni.navigateTo({
+				uni[this.type]({ 
 					url: '/pages/detail/detail?detail=' + JSON.stringify(this.item)
 				});
 			}

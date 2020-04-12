@@ -19,10 +19,10 @@
 </template>
 
 <script>
-	import UniListItem from "@/components/uni-ui/uni-list-item/uni-list-item.vue"
+	import uniListItem from "@/components/uni-ui/uni-list-item/uni-list-item.vue"
 	export default {
 		components: {
-			UniListItem
+			uniListItem
 		},
 		data() {
 			return {

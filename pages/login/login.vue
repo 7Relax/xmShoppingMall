@@ -110,16 +110,17 @@
 					console.log(res);
 					// 状态存储
 					this.login(res);
-					// 登录成功
+					// 更新购物车
+					this.$emit('updateCart');
+					// 隐藏遮罩
+					uni.hideLoading();
+					// 返回上一页
+					uni.navigateBack({
+						delta: 1
+					})
 					uni.showToast({
 						title: '登录成功'
 					});
-					uni.hideLoading();
-					setTimeout(() => {
-						uni.navigateBack({
-							delta: 1
-						})
-					},500)
 				})
 			}
 		}

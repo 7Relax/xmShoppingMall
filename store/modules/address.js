@@ -34,6 +34,10 @@ export default {
 	},
 	// mutations 中的方法不能互相调用，要借助 actions
 	mutations: {
+		// 更新收货地址, refersh：覆盖全部 or 追加
+		updateAddrList(state, {list, refresh}) {
+			state.list = refresh ? list : [...state.list, list];
+		},
 		// 创建收货地址
 		createAddr(state, item) {
 			state.list.unshift(item);

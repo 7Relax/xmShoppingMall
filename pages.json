@@ -68,6 +68,7 @@
         ,{
             "path" : "pages/cart/cart",
             "style" : {
+				"enablePullDownRefresh": true, // 开启下拉刷新
 				"app-plus": { 
 					"titleNView": false ,// 取消原生导航
 					"scrollIndicator": "none"

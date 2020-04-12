@@ -135,6 +135,8 @@
 			})
 			// 初始化
 			this.__init();
+			// test
+			// this.$U.updateCartBadge(3);
 		},
 		methods: {
 			async __init() {

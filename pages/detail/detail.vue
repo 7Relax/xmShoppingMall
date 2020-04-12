@@ -56,7 +56,8 @@
 		<!-- 热门推荐 -->
 		<card headTitle="热门推荐" :headTitleWeight="false" :headBorderBottom="false">
 			<view class="row j-sb">
-				<common-list v-for="(item, index) in hotList" :key="index" :item="item"></common-list>
+				<common-list v-for="(item, index) in hotList" 
+					:key="index" :item="item" type="redirectTo"></common-list>
 			</view>
 		</card>
 		
@@ -261,6 +262,7 @@
 			]),
 			// 初始化页面
 			__init(data) {
+				// 根据商品id获取商品信息
 				this.$H.get('/goods/'+data.id).then(res => {
 					console.log(res);
 					// 轮播图
@@ -346,18 +348,42 @@
 			},
 			// 加入购物车
 			addCart() {
+				// 没有库存
+				if (this.maxStock === 0) {
+					return;
+				}
+				// shop_id：如果是多规格传：sku_id，单规格：商品id
+				this.$H.post('/cart', {
+					shop_id: this.detail.sku_type === 0 ? this.detail.id : this.detail.goodsSkus[this.checkedSkusIndex].id,
+					skus_type: this.detail.sku_type,
+					num: this.detail.num
+				}, {
+					token: true
+				}). then(res => {
+					// 成功后，就有一条数据添加到数据库的购物车表里了，如果购物车table里已经有这个商品，则改变商品数量
+					console.log(res);
+					// 通知购物车列表更新数据
+					uni.$emit('updateCart');
+					// 隐藏筛选框
+					this.hide('attr');
+					// 加入成功
+					uni.showToast({
+						title: '加入成功'
+					});
+				})
+				// ------------------ test -------------------
 				// 组装数据（模拟）
-				var product = this.detail;
-				product['checked'] = false;
-				product['attrs'] = this.selects;
-				// 加入购物车
-				this.addCartFromDetail(product);
-				// 隐藏筛选框
-				this.hide('attr');
-				// 加入成功
-				uni.showToast({
-					title: '加入成功'
-				});
+				// var product = this.detail;
+				// product['checked'] = false;
+				// product['attrs'] = this.selects;
+				// // 加入购物车
+				// this.addCartFromDetail(product);
+				// // 隐藏筛选框
+				// this.hide('attr');
+				// // 加入成功
+				// uni.showToast({
+				// 	title: '加入成功'
+				// });
 			},
 			// 打开新增地址页面
 			openCreateAddress() {

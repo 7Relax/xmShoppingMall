@@ -73,6 +73,7 @@
 		},
 		data() {
 			return {
+				id: 0,
 				createTime: "2020-03-20 16:20",
 				status: "已发货",
 				order_items: [
@@ -84,8 +85,28 @@
 				totalPrice: 3999.00
 			}
 		},
+		onLoad(e) {
+			if (!e.id) {
+				uni.showToast({
+					title: '订单不存在',
+					icon: 'none'
+				})
+				return uni.navigateBack({
+					delta: 1
+				})
+			}
+			this.id = e.id;
+			// 获取订单详情
+			this.getData();
+		},
 		methods: {
-			
+			getData() {
+				this.$H.get('/order/'+this.id, {}, { 
+					token: true
+				}).then(res => {
+					console.log(res);
+				})
+			}
 		}
 	}
 </script>
